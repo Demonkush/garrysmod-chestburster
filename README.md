@@ -1,8 +1,8 @@
 # garrysmod-chestburster
 Chestburster by Demonkush
-Gamemode for Garry's Mod, a submission for the 2016 Facepunch Gamemode Contest
+Gamemode for Garry's Mod, a submission for the 2016 Facepunch Gamemode Competition
 
-Contest Page: https://facepunch.com/showthread.php?t=1537519
+Competition Page: https://facepunch.com/showthread.php?t=1537519
 
 
 What is Chestburster?
