@@ -79,6 +79,7 @@ end
 
 function CHESTBURSTER.ImbueWeapon(ply,element)
 	local wep = ply:GetActiveWeapon()
+	if !IsValid(wep) then return end
 	if wep:GetClass() != CHESTBURSTER.FistWeapon then
 		for a, b in pairs(CHESTBURSTER.Elements) do
 			if element == b.name then b.ImbueWeapon(ply,wep) end
@@ -98,6 +99,7 @@ end
 
 function CHESTBURSTER.DropWeapon(ply)
 	if ply.AssignedWeapon == nil then return end
+	if !IsValid(ply:GetActiveWeapon()) then return end
 	ply:DropWeapon(ply:GetActiveWeapon())
 	ply.AssignedWeapon = nil
 	ply:StripWeapons()
@@ -107,7 +109,12 @@ end
 
 function GM:PlayerCanPickupWeapon(ply,wep)
 	if ply:GetNWBool("KnockedOut") == true then return false end
-	if ply:GetActiveWeapon():GetClass() == CHESTBURSTER.FistWeapon then return true end
+	if IsValid(ply:GetActiveWeapon()) then 
+		if ply:GetActiveWeapon():GetClass() == CHESTBURSTER.FistWeapon then 
+			ply:StripWeapon(CHESTBURSTER.FistWeapon) return true 
+		end
+	end
+	if ply.AssignedWeapon != nil then if ply.AssignedWeapon == wep then ply:StripWeapon(CHESTBURSTER.FistWeapon) return true end end
 	return false
 end
 
