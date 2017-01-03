@@ -160,29 +160,23 @@ function CHESTBURSTER_EndRoundScoreboard(winners)
 	if winners[1] then
 		local Winner1 = vgui.Create("DLabel",EndRoundScoreboard)
 		Winner1:SetPos(15,50)
-		Winner1:SetFont("Trebuchet24")	
-		Winner1:SetTextColor(Color(255,215,155,255))
+		Winner1:SetFont("Trebuchet24") Winner1:SetTextColor(Color(255,215,155,255))
 		Winner1:SetText("[Winner!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || Knockouts: "..winners[1].kos.." || Knocked Out: "..winners[1].kod)
-		Winner1:SetContentAlignment(5)
-		Winner1:SizeToContents()
+		Winner1:SetContentAlignment(5) Winner1:SizeToContents()
 	end
-	if winners[1] then
+	if winners[2] then
 		local Winner2 = vgui.Create("DLabel",EndRoundScoreboard)
 		Winner2:SetPos(55,100)
-		Winner2:SetFont("Trebuchet18")
-		Winner2:SetTextColor(Color(215,255,155,215))
-		Winner2:SetText("[2nd Place!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod)
-		Winner2:SetContentAlignment(5)
-		Winner2:SizeToContents()
+		Winner2:SetFont("Trebuchet18") Winner2:SetTextColor(Color(215,255,155,215))
+		Winner2:SetText("[2nd Place!~] "..winners[2].name.." || Gold: "..winners[2].gold.." || KOs: "..winners[2].kos.." || KO'd: "..winners[2].kod)
+		Winner2:SetContentAlignment(5) Winner2:SizeToContents()
 	end
-	if winners[1] then
+	if winners[3] then
 		local Winner3 = vgui.Create("DLabel",EndRoundScoreboard)
 		Winner3:SetPos(55,150)
-		Winner3:SetFont("Trebuchet18")
-		Winner3:SetTextColor(Color(215,215,215,185))
-		Winner3:SetText("[3rd Place!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod)
-		Winner3:SetContentAlignment(5)
-		Winner3:SizeToContents()
+		Winner3:SetFont("Trebuchet18") Winner3:SetTextColor(Color(215,215,215,185))
+		Winner3:SetText("[3rd Place!~] "..winners[3].name.." || Gold: "..winners[3].gold.." || KOs: "..winners[3].kos.." || KO'd: "..winners[3].kod)
+		Winner3:SetContentAlignment(5) Winner3:SizeToContents()
 	end
 
 	gui.EnableScreenClicker(true)
