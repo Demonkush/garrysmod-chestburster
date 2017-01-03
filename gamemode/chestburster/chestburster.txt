@@ -1,0 +1,6 @@
+"chestburster"
+{
+	"base"		"base"
+	"title"		"Chestburster"
+	"menusystem"	"1"
+}
