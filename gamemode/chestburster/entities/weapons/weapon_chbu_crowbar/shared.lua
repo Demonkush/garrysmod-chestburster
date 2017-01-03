@@ -8,6 +8,7 @@ if CLIENT then
 end
 SWEP.Base = "weapon_chbu_base"
 
+SWEP.PrintName 			= "Wandbar"
 SWEP.HoldType           = "melee"
 SWEP.Spawnable 			= true
 SWEP.AdminSpawnable     = true

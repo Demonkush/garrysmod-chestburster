@@ -3,6 +3,7 @@ ENT.Base = "base_anim"
 
 if CLIENT then
 	function ENT:Initialize()
+		self:DrawShadow(false)
 		self.Emit = ParticleEmitter(self:GetPos())
 		self.NextEmit = CurTime()
 	end

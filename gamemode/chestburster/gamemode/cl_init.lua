@@ -93,22 +93,22 @@ function CHESTBURSTER_DrawHUD()
 	local sw,sh = ScrW(),ScrH()
 	local wep = LocalPlayer():GetActiveWeapon()
 	if IsValid(wep) then
-		draw.SimpleTextOutlined(wep.PrintName,"Trebuchet24",ScrW()/2,ScrH()-35,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,255))
+		draw.SimpleTextOutlined(wep.PrintName,"DermaLarge",ScrW()/2,ScrH()-35,Color(255,255,255,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,155))
 	end
 
 	-- Draw KO Power meter ( KO over Max KO )
 	local ko,komax = LocalPlayer():GetNWInt("KO"),LocalPlayer():GetNWInt("KOMax")
 	local kometer = ko/komax*250
-	local kocolor = Color(155,215,155,55)
+	local kocolor = Color(155+ko,215-ko,155-ko,55)
 	if LocalPlayer():GetNWBool("KnockedOut") == true then
 		kocolor = Color(255,105,105,55)
-		kometer = ko
-		draw.SimpleTextOutlined("Knocked Out!","Trebuchet24",ScrW()/2,ScrH()-70,Color(215,55,55,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,215))
+		kometer = 0
+		draw.SimpleTextOutlined("Knocked Out!","Trebuchet24",ScrW()/2,ScrH()-70,Color(215,55,55,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,155))
 	end
 	surface.SetDrawColor(0,0,0,155) surface.DrawRect(sw/2-127,ScrH()-77,254,29)
 	surface.SetDrawColor(kocolor)
 	surface.DrawRect(sw/2-125,ScrH()-75,kometer,25)
-	draw.SimpleTextOutlined("KO Meter","Trebuchet24",ScrW()/2,ScrH()-90,Color(155,155,155,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,215))
+	draw.SimpleTextOutlined("KO Meter","DermaLarge",ScrW()/2,ScrH()-90,Color(155+ko,155,155-ko,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,155))
 
 	-- Draw GOLD, Suffered KOs and Total KOs
 	local gold,goldmax = LocalPlayer():GetNWInt("Gold"),CHESTBURSTER.MaxGold
@@ -201,13 +201,13 @@ local local_powerup_table = {}
 function CHESTBURSTER_DrawPowerups()
 	local margin = 0
 	for a, b in pairs(local_powerup_table) do
-		draw.SimpleTextOutlined(b,"Trebuchet24",ScrW()/2+250,ScrH()-55-margin,Color(155,155,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,255))
-		margin = margin - 25
+		draw.SimpleTextOutlined(b,"DermaLarge",ScrW()/2+250,ScrH()-75-margin,Color(155,155,255,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,155))
+		margin = margin + 30
 	end
 end
 net.Receive("CHESTBURSTERSENDPOWERUP",function(len)
 	local powerup,time = net.ReadString(),net.ReadInt(8)
-	table.insert(local_powerup_table,powerup)
+	if !table.HasValue(local_powerup_table,powerup) then table.insert(local_powerup_table,powerup) end
 	if !timer.Exists("CLTimerPowerup"..powerup) then
 		timer.Create("CLTimerPowerup"..powerup,time,1,function()
 			table.RemoveByValue(local_powerup_table,powerup)
@@ -223,13 +223,13 @@ local local_status_table = {}
 function CHESTBURSTER_DrawStatuses()
 	local margin = 0
 	for a, b in pairs(local_status_table) do
-		draw.SimpleTextOutlined(b,"Trebuchet24",ScrW()/2-250,ScrH()-55-margin,Color(255,155,155,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,255))
-		margin = margin - 25
+		draw.SimpleTextOutlined(b,"DermaLarge",ScrW()/2-250,ScrH()-75-margin,Color(255,155,155,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,255))
+		margin = margin + 30
 	end
 end
 net.Receive("CHESTBURSTERSENDSTATUS",function(len)
 	local status,time = net.ReadString(),net.ReadInt(8)
-	table.insert(local_status_table,status)
+	if !table.HasValue(local_status_table,status) then table.insert(local_status_table,status) end
 	if !timer.Exists("CLTimerStatus"..status) then
 		timer.Create("CLTimerStatus"..status,time,1,function()
 			table.RemoveByValue(local_status_table,status)

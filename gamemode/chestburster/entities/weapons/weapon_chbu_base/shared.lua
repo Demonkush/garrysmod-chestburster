@@ -6,6 +6,7 @@ if CLIENT then
 	SWEP.SlotPos 		= 1
 	SWEP.ViewModelFlip	= false
 end
+SWEP.PrintName 			= "CHBU Base"
 SWEP.HoldType           = "ar2"
 SWEP.Spawnable 			= true
 SWEP.AdminSpawnable     = true

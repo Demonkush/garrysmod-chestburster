@@ -36,6 +36,7 @@ end
 
 -- Pre Round = 1, Active Round = 2, Post Round = 3
 function CHESTBURSTER.RoundStart()
+	game.CleanUpMap()
 	CHESTBURSTER.RoundNumber = CHESTBURSTER.RoundNumber + 1
 	CHESTBURSTER.RoundState = 2
 	CHESTBURSTER.RoundTimerFunc(1)

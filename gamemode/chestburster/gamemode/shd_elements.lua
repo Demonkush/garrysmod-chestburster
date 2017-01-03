@@ -56,7 +56,7 @@ CHESTBURSTER.Elements[2] = {
 			if IsValid(target) && target:Alive() then
 				target:SetNWBool("StatusFrost",true)
 				local slowchance = math.random(1,100) if slowchance > 65 then target:Slow(7) end
-				target:EmitSound("physics/glass/glass_strain"..math.random(1,4)..".wav",100,75)
+				target:EmitSound("physics/glass/glass_strain"..math.random(1,4)..".wav",100,95)
 				if target:GetNWBool("StatusWater") == true then
 					local freezechance = math.random(1,100) if freezechance > 75 then CHESTBURSTER.Elements[5].ClearStatus(target) target:Frostbite(5) end
 				end

@@ -1,4 +1,5 @@
 CHESTBURSTER = {}
+CHESTBURSTER.Version = "1.1"
 CHESTBURSTER.ChestSpawnTable = {}
 
 include("shd_elements.lua")
@@ -48,6 +49,7 @@ CHESTBURSTER.RareGoldRating = 4 	-- Multiplier for getting gold from rare chests
 CHESTBURSTER.WeaponChance 	= 55 	-- Percentage of getting a weapon from a chest.
 CHESTBURSTER.PowerupChance 	= 77 	-- Percentage of getting a powerup from a chest.
 CHESTBURSTER.TrapChestChance= 55 	-- Percentage of getting a bad chest.
+CHESTBURSTER.ChestSpawnDelay= 5 	-- Chest spawn delay.
 
 CHESTBURSTER.SlowRating 	= 2  	-- Multiplier for movement slowing buff.
 CHESTBURSTER.HasteRating 	= 2 	-- Multiplier for movement speed buff.
@@ -55,6 +57,9 @@ CHESTBURSTER.HasteRating 	= 2 	-- Multiplier for movement speed buff.
 CHESTBURSTER.KOTime 		= 7 	-- time in seconds spent KO'd.
 CHESTBURSTER.KORecoveryTime = 3 	-- time in seconds immune to KO.
 CHESTBURSTER.KOMax 			= 100 	-- Max KO power.
+
+CHESTBURSTER.KORegen		= 5 	-- Amount of KO to regen overtime.
+CHESTBURSTER.KORegenDelay	= 2 	-- KO regeneration delay.
 
 -- Available MapChangeMode types -- 
 -- "nextmap": Automatically retrieves and changes to next map. See mapcycle.txt in garrysmod/cfg

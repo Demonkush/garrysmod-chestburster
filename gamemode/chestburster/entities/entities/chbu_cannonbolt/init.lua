@@ -17,6 +17,11 @@ function ENT:Initialize()
 	self.Damage = 10
 end
 
+function ENT:Think()
+	self:SetVelocity(self:GetVelocity()*25)
+	return true
+end
+
 function ENT:SetElementColor()
 	for a, b in pairs(CHESTBURSTER.Elements) do
 		if self:GetElement() == b.name then self:SetColor(b.color) end
@@ -24,9 +29,11 @@ function ENT:SetElementColor()
 end
 
 function ENT:Explode()
+	self:EmitSound("weapons/physcannon/energy_disintegrate"..math.random(4,5)..".wav",95,125)
+
 	for a, b in pairs(ents.FindInSphere(self:GetPos(),255)) do
 		if b != self:GetOwner() then
-			CHESTBURSTER_PlayerDamage(25,self:GetElement(),b,self:GetOwner())
+			CHESTBURSTER_PlayerDamage(45,self:GetElement(),b,self:GetOwner())
 		end
 	end
 

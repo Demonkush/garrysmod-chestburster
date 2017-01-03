@@ -8,6 +8,7 @@ if CLIENT then
 end
 SWEP.Base = "weapon_chbu_base"
 
+SWEP.PrintName 			= "Sorcerer Cannon"
 SWEP.HoldType           = "rpg"
 SWEP.Spawnable 			= true
 SWEP.AdminSpawnable     = true
@@ -15,7 +16,7 @@ SWEP.AdminSpawnable     = true
 SWEP.ViewModel          = "models/weapons/v_rpg.mdl"
 SWEP.WorldModel         = "models/weapons/w_rocketlauncher.mdl"
 
-SWEP.Primary.Sound 			= Sound("weapons/flaregun/fire.wav")
+SWEP.Primary.Sound 			= Sound("npc/waste_scanner/grenade_fire.wav")
 SWEP.Primary.Damage 		= 15
 SWEP.Primary.Delay 			= 2
 SWEP.Primary.ClipSize		= -1

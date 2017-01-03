@@ -46,13 +46,14 @@ function CHESTBURSTER.PlayerReset(ply)
 	CHESTBURSTER.ClearElementalStatus(ply)
 end
 
-function GM:PlayerInitialSpawn(ply) end
+function GM:PlayerInitialSpawn(ply) CHESTBURSTER.PlayerReset(ply) end
 function GM:PlayerSpawn(ply) CHESTBURSTER.PlayerReset(ply) end
 function GM:PlayerDeath(victim,inflictor,attacker) end
 function GM:DoPlayerDeath() end
 function GM:GetFallDamage( ply, speed ) return 0 end
 
 function CHESTBURSTER.CollectGold(ply,gold)
+	ply:EmitSound("ambient/levels/labs/coinslot1.wav")
 	ply:SetNWInt("Gold",ply:GetNWInt("Gold")+gold)
 	if ply:GetNWInt("Gold") >= CHESTBURSTER.MaxGold then
 		CHESTBURSTER.RoundEnd()
@@ -86,7 +87,6 @@ function CHESTBURSTER.ImbueWeapon(ply,element)
 end
 
 function CHESTBURSTER.GiveWeapon(ply,a)
-	if ply:GetActiveWeapon() && ply:GetActiveWeapon():GetClass() == CHESTBURSTER.Weapons[a].wep then return end
 	if ply.AssignedWeapon == nil then
 		ply:StripWeapons()
 		ply:Give(CHESTBURSTER.Weapons[a].wep)
@@ -107,8 +107,7 @@ end
 
 function GM:PlayerCanPickupWeapon(ply,wep)
 	if ply:GetNWBool("KnockedOut") == true then return false end
-	if ply.AssignedWeapon != nil then if ply.AssignedWeapon == wep then return true end end
-	if ply.AssignedWeapon == nil then return true end
+	if ply:GetActiveWeapon():GetClass() == CHESTBURSTER.FistWeapon then return true end
 	return false
 end
 
@@ -181,6 +180,7 @@ function CHESTBURSTER.HandleElements(etype,element,target)
 end
 
 function CHESTBURSTER.ElementalDamage(element,target,attacker)
+	if target == attacker then return end
 	local r = math.random(1,100)
 	for a, b in pairs(CHESTBURSTER.Elements) do
 		if b.name == element then
@@ -206,8 +206,7 @@ function GM:EntityTakeDamage(target,dmginfo)
 	end
 	return true
 end
-function GM:ScalePlayerDamage(ply,hitgroup,dmginfo)
-end
+function GM:ScalePlayerDamage(ply,hitgroup,dmginfo) end
 
 function CHESTBURSTER_PlayerDamage(damage,element,target,attacker)
 	if CHESTBURSTER.RoundState == 3 then return end

@@ -4,7 +4,6 @@ Sounds
 CHESTBURSTER.TrapSounds = {
 	"npc/roller/mine/rmine_taunt1.wav",
 	"npc/roller/mine/rmine_taunt2.wav",
-	"npc/combine_soldier/vo/hasnegativemovement.wav",
 	"npc/stalker/breathing3.wav"
 }
 
@@ -19,7 +18,9 @@ CHESTBURSTER.HurtSounds = {
 	"ambient/voices/citizen_beaten2.wav",
 	"ambient/voices/citizen_beaten3.wav",
 	"ambient/voices/citizen_beaten4.wav",
-	"ambient/voices/citizen_beaten5.wav"			
+	"ambient/voices/citizen_beaten5.wav",
+	"vo/npc/male01/myleg01.wav",
+	"vo/npc/male01/myleg02.wav"	
 }
 
 CHESTBURSTER.KOSounds = {
@@ -66,6 +67,7 @@ CHESTBURSTER.Taunts = {
 	"vo/trainyard/ba_sorryscare.wav",
 	"vo/trainyard/al_overhere.wav",
 	"vo/npc/vortigaunt/prepare.wav",
+	"vo/npc/barney/ba_goingdown.wav",
 	"vo/npc/vortigaunt/morethanmeets.wav"
 }
 
@@ -83,5 +85,6 @@ CHESTBURSTER.RecoverSounds = {
 	"vo/npc/female01/okimready03.wav",
 	"vo/npc/vortigaunt/dreamed.wav",
 	"vo/k_lab/kl_nownow02.wav",
+	"vo/npc/vortigaunt/forfreedom.wav",
 	"vo/k_lab/ba_nottoosoon01.wav"
 }

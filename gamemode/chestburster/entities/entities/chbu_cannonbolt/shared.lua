@@ -7,6 +7,7 @@ end
 
 if CLIENT then
 	function ENT:Initialize()
+		self:DrawShadow(false)
 		self.Emit = ParticleEmitter(self:GetPos())
 		self.NextEmit = RealTime() 
 	end
@@ -19,18 +20,18 @@ if CLIENT then
 			local Emit = self.Emit
 			Emit:SetPos(self:GetPos())
 			local particle = Emit:Add("sprites/glow04_noz",self:GetPos())
-			particle:SetVelocity(VectorRand()*95)
+			particle:SetVelocity(VectorRand()*25)
 			particle:SetDieTime(1)
 			particle:SetStartAlpha(75)
 			particle:SetEndAlpha(0)
-			particle:SetStartSize(math.random(15,25))
+			particle:SetStartSize(math.random(35,45))
 			particle:SetEndSize(1)
 			particle:SetRoll(math.Rand(0,360))
 			particle:SetRollDelta(math.Rand(-1,1))
 			particle:SetGravity(Vector(0,0,0))
 			particle:SetAirResistance(255)
 			particle:SetColor(color.r,color.g,color.b,55)
-			self.NextEmit = RealTime()+0.05
+			self.NextEmit = RealTime()+0.025
 		end
 	end
 

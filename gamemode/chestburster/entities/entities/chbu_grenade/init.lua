@@ -31,9 +31,11 @@ function ENT:SetElementColor()
 end
 
 function ENT:Explode()
+	self:EmitSound("npc/roller/mine/rmine_explode_shock1.wav")
+
 	for a, b in pairs(ents.FindInSphere(self:GetPos(),255)) do
 		if b != self:GetOwner() then
-			CHESTBURSTER_PlayerDamage(25,self:GetElement(),b,self:GetOwner())
+			CHESTBURSTER_PlayerDamage(35,self:GetElement(),b,self:GetOwner())
 		end
 	end
 
@@ -43,16 +45,16 @@ function ENT:Explode()
 	self:Remove()
 end
 
-function ENT:PhysicsCollide()
+local colents = {"prop_physics","prop_physics_multiplayer"}
+function ENT:PhysicsCollide(data,phys)
 	if self.Collided == true then return end
 	self:SetVelocity(Vector(0,0,0))
-	self:SetMoveType(MOVETYPE_NONE)
+	if table.HasValue(colents,data.HitEntity:GetClass()) then self:SetParent(data.HitEntity) self.Collided = true end
 	timer.Simple(1,function()
 		if IsValid(self) then
 			self:Explode()
 		end
 	end)
-	self.Collided = true
 end
 
 function ENT:Touch(ent)

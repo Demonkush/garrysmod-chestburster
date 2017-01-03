@@ -1,4 +1,4 @@
--- Chestburster v1.0 -- by Demonkush --
+-- Chestburster -- by Demonkush --
 -- http://steamcommunity.com/id/Demonkush/
 -- www.xmpstudios.com --
 include("shared.lua")
@@ -45,7 +45,6 @@ function GM:Think()
 		if CHESTBURSTER.RoundState == 2 then
 			CHESTBURSTER.RoundTimer = CHESTBURSTER.RoundTimer - 1 
 			if CHESTBURSTER.RoundTimer < 0 then CHESTBURSTER.RoundEnd() end 
-			print(CHESTBURSTER.RoundTimer)
 		end
 		gamemode.TimerDelay = CurTime() + 1
 	end
@@ -53,17 +52,18 @@ function GM:Think()
 		CHESTBURSTER.RoundTick() gamemode.RoundTickDelay = CurTime() + 5
 	end
 	if gamemode.ChestSpawnDelay < CurTime() then
-		CHESTBURSTER.SpawnChest() gamemode.ChestSpawnDelay = CurTime() + 7
+		CHESTBURSTER.SpawnChest() gamemode.ChestSpawnDelay = CurTime() + CHESTBURSTER.ChestSpawnDelay
 	end
 	if gamemode.PlayerKODelay < CurTime() then
-		CHESTBURSTER.PlayerKOTick() gamemode.PlayerKODelay = CurTime() + 2
+		CHESTBURSTER.PlayerKOTick() gamemode.PlayerKODelay = CurTime() + CHESTBURSTER.KORegenDelay
 	end
 end
 
 function CHESTBURSTER.PlayerKOTick()
 	for k, v in pairs(player.GetAll()) do
 		if v:GetNWBool("Spectating") == false then
-			v:ChangeKO(5,"-")
+			v:SetHealth(100)
+			v:ChangeKO(CHESTBURSTER.KORegen,"-")
 		end
 	end
 end
