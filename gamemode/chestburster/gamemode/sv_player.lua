@@ -113,7 +113,7 @@ end
 
 function GM:PlayerCanPickupWeapon(ply,wep)
 	if ply:GetNWBool("KnockedOut") == true then return false end
-	if ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply:GetActiveWeapon():Remove() ply:Give(wep:GetClass()) ply:SelectWeapon(wep:GetClass()) return true end
+	if ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply:GetActiveWeapon():Remove() ply:SelectWeapon(wep:GetClass()) return true end
 	if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then return true end
 	if ply.AssignedWeapon == wep or ply.Assignedweapon == nil then return true end
 	return false

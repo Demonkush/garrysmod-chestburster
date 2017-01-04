@@ -1,3 +1,7 @@
+GM.Name = "Chestburster"
+GM.Author = "Demonkush"
+GM.Website = "http://www.xmpstudios.com"
+
 CHESTBURSTER = {}
 CHESTBURSTER.Version = "1.1b"
 CHESTBURSTER.ChestSpawnTable = {}
