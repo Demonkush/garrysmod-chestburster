@@ -30,23 +30,24 @@ Some functions and variables in Chestburster are somewhat easy to modify. There 
 
 Try enabling CHESTBURSTER.Debug when you are doing map setup, it should make things a lot easier!
 
+# Table Call Funcs
 
-# Elements
+Elements
 
 name(string), buffChance(integer), color(color), time(integer), onBuff(function), onDamage(function), ImbueWeapon(function), ClearStatus(function)
 
 
-# Powerups
+Powerups
 
 name(string), desc(string), color(color), time(integer), onPickup(function), onExpire(function)
 
 
-# Weapons
+Weapons
 
 name(string), wep(weapon entity)
 
 
-# Traps
+Traps
 
 name(string), doTrap(function)
 
