@@ -240,10 +240,12 @@ function CHESTBURSTER_PlayerDamage(damage,element,target,attacker)
 				CHESTBURSTER_Message(target, "Damage", attacker:Name().." was knocked out!", Vector(255,155,155), true)
 			end
 			if attacker:IsPlayer() && attacker != target then 
-				attacker:SetNWInt("TotalKO",attacker:GetNWInt("TotalKO")+1) 
+				attacker:SetNWInt("TotalKO",attacker:GetNWInt("TotalKO")+1)
+				attacker:AddFrags(1)
 				CHESTBURSTER_Message(target, "Damage", attacker:Name().." knocked out "..target:Name().."!", Vector(255,155,155), true)
 			end
 			target:SetNWInt("SelfKO",target:GetNWInt("SelfKO")+1)
+			target:AddDeaths(1)
 			target:KnockOut()
 		end
 	end
