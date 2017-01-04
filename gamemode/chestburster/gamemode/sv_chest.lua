@@ -12,19 +12,19 @@ function CHESTBURSTER.OpenChest(ply,chest)
 	gr = gr + gd
 	if chest:GetRare() != true then
 		if r <= CHESTBURSTER.TrapChestChance then
-			CHESTBURSTER_Message(self, "Chest", "It was a trap!", Vector(215,155,155), false)
+			CHESTBURSTER_Message(ply, "Chest", "It was a trap!", Vector(215,155,155), false)
 			chest:EmitSound(table.Random(CHESTBURSTER.TrapSounds),100,100)
 			local ab = math.random(1,#CHESTBURSTER.Trap)
 			for a, b in pairs(CHESTBURSTER.Trap) do if ab == a then b.doTrap(ply,chest) end end
 			return
 		end
 	else 
-		CHESTBURSTER_Message(self, "Chest", "Lucky! It was a rare chest!", Vector(255,215,155), false)
+		CHESTBURSTER_Message(ply, "Chest", "Lucky! It was a rare chest!", Vector(255,215,155), false)
 		gr = gr * CHESTBURSTER.RareGoldRating 
 	end
 
 	if chest:GetTrap() == true then
-		CHESTBURSTER_Message(self, "Chest", "It was a trap!", Vector(215,155,155), false)
+		CHESTBURSTER_Message(ply, "Chest", "It was a trap!", Vector(215,155,155), false)
 		chest:EmitSound(table.Random(CHESTBURSTER.TrapSounds),100,100)
 		local ab = math.random(1,#CHESTBURSTER.Trap)
 		for a, b in pairs(CHESTBURSTER.Trap) do if ab == a then b.doTrap(ply,chest) end end

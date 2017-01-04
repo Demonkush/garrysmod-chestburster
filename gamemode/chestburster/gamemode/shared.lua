@@ -34,7 +34,7 @@ CHESTBURSTER.Debug = false -- Enable this for easy placement of spawns and such.
 CHESTBURSTER.MaxGold = 1000 -- Total gold to collect to win the game.
 CHESTBURSTER.GoldDropFraction = 4 -- Fraction of gold dropped on KO.
 
-CHESTBURSTER.RoundTime 		= 120 	-- Duration of a round.
+CHESTBURSTER.RoundTime 		= 240 	-- Duration of a round.
 CHESTBURSTER.MapVoteDelay 	= 10 	-- Delay between end of last round and map vote starting.
 CHESTBURSTER.MaxRounds 		= 3 	-- Total number of rounds before map change.
 
@@ -65,3 +65,5 @@ CHESTBURSTER.KORegenDelay	= 2 	-- KO regeneration delay.
 -- "nextmap": Automatically retrieves and changes to next map. See mapcycle.txt in garrysmod/cfg
 -- "mapvote": Third party map vote system ( requires user config, see CHESTBURSTER.ChangeMap() )
 CHESTBURSTER.MapChangeMode = "nextmap"
+
+concommand.Remove("kill")

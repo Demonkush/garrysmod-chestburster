@@ -16,7 +16,7 @@ SWEP.AdminSpawnable     = true
 SWEP.ViewModel          = "models/weapons/v_pistol.mdl"
 SWEP.WorldModel         = "models/weapons/w_pistol.mdl"
 
-SWEP.Primary.Sound 			= Sound("weapons/pistol/pistol_fire3.wav")
+SWEP.Primary.Sound 			= Sound("weapons/pistol/pistol_fire2.wav")
 SWEP.Primary.Damage 		= 15
 SWEP.Primary.Delay 			= 0.3
 SWEP.Primary.ClipSize		= -1

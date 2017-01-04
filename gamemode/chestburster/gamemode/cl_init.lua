@@ -74,7 +74,7 @@ function CHESTBURSTER_DrawPlayerBar()
 	local margin = 0
 	for k, v in pairs(player.GetAll()) do
 		draw.SimpleTextOutlined(v:Name().." : "..v:GetNWInt("Gold"),"Trebuchet24",CHESTBURSTER_PBarDistance+margin,0,Color(155,55,55,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,255))
-		margin = margin + 150 + string.len(v:Name()) + string.len(v:GetNWInt("Gold"))
+		margin = margin + 150 + (string.len(v:Name())*5) + (string.len(v:GetNWInt("Gold"))*5)
 	end
 end
 

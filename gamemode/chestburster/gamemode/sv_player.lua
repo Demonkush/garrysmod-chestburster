@@ -1,6 +1,6 @@
 function CHESTBURSTER.PlayerReset(ply)
 	ply:StripWeapons()
-	ply:SetNWBool("Spectating",false)
+	if ply:GetNWBool("Spectating") == true then ply:UnSpectate() ply:SetNWBool("Spectating",false) end
 	ply:SetNWBool("SpawnNextRound",true)
 
 	ply.AssignedWeapon = nil
@@ -23,6 +23,10 @@ function CHESTBURSTER.PlayerReset(ply)
 	ply:SetRunSpeed(ply.BaseRunSpeed)
 	ply:SetCrouchedWalkSpeed(ply.BaseCrouchSpeed)
 
+	-- Stupid hands
+	local oldhands = ply:GetHands()
+	if ( IsValid( oldhands ) ) then oldhands:Remove() end
+	ply:SetupHands()
 
 	ply:SetNWInt("DamageMultiplier",1)
 	ply:SetNWInt("DamageResistance",0)
@@ -90,9 +94,9 @@ end
 function CHESTBURSTER.GiveWeapon(ply,a)
 	if ply.AssignedWeapon == nil then
 		ply:StripWeapons()
-		ply:Give(CHESTBURSTER.Weapons[a].wep)
 		ply.AssignedWeapon = CHESTBURSTER.Weapons[a].wep
-		CHESTBURSTER_Message(target, "Weapon", "Received the "..CHESTBURSTER.Weapons[a].name.."!", Vector(155,255,155), false)
+		ply:Give(CHESTBURSTER.Weapons[a].wep)
+		CHESTBURSTER_Message(ply, "Weapon", "Received the "..CHESTBURSTER.Weapons[a].name.."!", Vector(155,255,155), false)
 		ply:EmitSound("items/ammo_pickup.wav")
 	end
 end
@@ -109,12 +113,9 @@ end
 
 function GM:PlayerCanPickupWeapon(ply,wep)
 	if ply:GetNWBool("KnockedOut") == true then return false end
-	if IsValid(ply:GetActiveWeapon()) then 
-		if ply:GetActiveWeapon():GetClass() == CHESTBURSTER.FistWeapon then 
-			ply:StripWeapon(CHESTBURSTER.FistWeapon) return true 
-		end
-	end
-	if ply.AssignedWeapon != nil then if ply.AssignedWeapon == wep then ply:StripWeapon(CHESTBURSTER.FistWeapon) return true end end
+	if ply:HasWeapon(CHESTBURSTER.FistWeapon) then return false end
+	if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then return true end
+	if ply.AssignedWeapon == wep then return true end
 	return false
 end
 
@@ -124,7 +125,7 @@ function CHESTBURSTER.GivePowerup(ply,powerup)
 	local fx = EffectData() fx:SetOrigin( ply:GetPos() + Vector(0,0,32) )
 	util.Effect( "fx_cb_powerup", fx )
 	ply:EmitSound("npc/scanner/cbot_energyexplosion1.wav",100,85)
-	CHESTBURSTER_Message(target, "Powerup", CHESTBURSTER.Powerups[powerup].name.." activated! "..CHESTBURSTER.Powerups[powerup].desc, Vector(155,255,155), false)
+	CHESTBURSTER_Message(ply, "Powerup", CHESTBURSTER.Powerups[powerup].name.." activated! "..CHESTBURSTER.Powerups[powerup].desc, Vector(155,255,155), false)
 
 	timer.Simple(CHESTBURSTER.Powerups[powerup].time,function()
 		CHESTBURSTER.Powerups[powerup].onExpire(ply)
@@ -366,7 +367,7 @@ end
 function player:Climb()
 	if self:GetEyeTrace().HitWorld == true then
 		local length = (self:GetEyeTrace().HitPos-self:GetPos()):Length()
-		if length < 100 && length > 70 then
+		if length < 100 && length > 60 then
 			if self:OnGround() then
 				self:SetPos(self:GetPos()+Vector(0,0,1))
 				self:SetVelocity(Vector(0,0,275))

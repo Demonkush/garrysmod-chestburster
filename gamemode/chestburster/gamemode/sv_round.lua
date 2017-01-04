@@ -80,7 +80,7 @@ function CHESTBURSTER.RoundEnd()
 	end
 	table.sort(players,function(a,b) return a:GetNWInt("Gold")>b:GetNWInt("Gold") end)
 
-	local winning = {} table.SortByKey(players)
+	local winning = {}
 	if IsValid(players[1]) then table.insert(winning,{name=players[1]:Name(),gold=players[1]:GetNWInt("Gold"),kos=players[1]:GetNWInt("TotalKO"),kod=players[1]:GetNWInt("SelfKO")}) end
 	if IsValid(players[2]) then table.insert(winning,{name=players[2]:Name(),gold=players[2]:GetNWInt("Gold"),kos=players[2]:GetNWInt("TotalKO"),kod=players[2]:GetNWInt("SelfKO")}) end
 	if IsValid(players[3]) then table.insert(winning,{name=players[3]:Name(),gold=players[3]:GetNWInt("Gold"),kos=players[3]:GetNWInt("TotalKO"),kod=players[3]:GetNWInt("SelfKO")}) end
