@@ -22,9 +22,8 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then
 		phys:Wake()
+		phys:EnableMotion(false)
 	end
-
-	self:Freeze(true)
 
 	self:SetTrap(false)
 	local r = math.random(1,100)
