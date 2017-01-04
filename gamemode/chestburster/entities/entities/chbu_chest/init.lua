@@ -3,9 +3,10 @@ include('shared.lua')
 
 function ENT:Initialize()
 	self:SetModel("models/props_junk/wood_crate002a.mdl")
-	self:PhysicsInit( SOLID_VPHYSICS )
+	self:PhysicsInit( SOLID_NONE )
 	self:SetMoveType( MOVETYPE_NONE )
 	self:SetSolid( SOLID_VPHYSICS )
+	self:SetUseType( SIMPLE_USE )
 
 	local r = math.random(1,#CHESTBURSTER.ChestModels)
 	for a,b in pairs(CHESTBURSTER.ChestModels) do
@@ -23,6 +24,8 @@ function ENT:Initialize()
 		phys:Wake()
 	end
 
+	self:Freeze(true)
+
 	self:SetTrap(false)
 	local r = math.random(1,100)
 	if r <= CHESTBURSTER.TrapChestChance then
@@ -36,11 +39,13 @@ function ENT:Initialize()
 		self:SetTrap(false)
 	end
 
-	timer.Simple(25,function()
-		if IsValid(self) && self.Opened == false then
-			self:Remove()
-		end
-	end)
+	if CHESTBURSTER.ChestDespawnDelay > 1 then
+		timer.Simple(CHESTBURSTER.ChestDespawnDelay,function()
+			if IsValid(self) && self.Opened == false then
+				self:Remove()
+			end
+		end)
+	end
 
 	self.Opened = false
 end

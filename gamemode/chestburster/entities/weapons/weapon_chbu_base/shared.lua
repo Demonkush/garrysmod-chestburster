@@ -1,3 +1,9 @@
+-- Chestburster Weapon Base
+
+-- Things to know:
+-- self.Primary.Damage affects projectile entities, therefore a valid damage variable to modify.
+-- Only touch SWEP table variables and Projectile variables, others are handled by the gamemode.
+
 if SERVER then AddCSLuaFile("shared.lua") end
 
 if CLIENT then
@@ -47,7 +53,6 @@ function SWEP:Initialize()
 end
 
 function SWEP:Deploy()
-	self.Owner:PrintMessage(HUD_PRINTTALK,"Picked up "..self.PrintName)
 	self.Owner.AssignedWeapon = self.Weapon:GetClass()
 end
 
@@ -76,6 +81,9 @@ function SWEP:CHBU_BulletAttack()
 		if SERVER then
 			for k, v in pairs(ents.FindInSphere(tr.HitPos,100)) do
 				CHESTBURSTER_PlayerDamage(self.Primary.Damage,self:GetElement(),tr.Entity,self.Owner)
+			end
+			if self:GetElement() == "Storm" then
+				CHESTBURSTER.DoTesla(tr.HitPos)
 			end
 		end
 		local fx = EffectData() fx:SetOrigin( tr.HitPos ) fx:SetScale(1)

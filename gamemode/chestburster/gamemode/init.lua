@@ -75,9 +75,13 @@ function CHESTBURSTER.RoundTick()
 			if v:GetNWBool("Spectating") == true then
 				plys = plys - 1
 			end
+			if v.AssignedWeapon == nil then
+				if !v:HasWeapon(CHESTBURSTER.FistWeapon) then v:Give(CHESTBURSTER.FistWeapon) v:SelectWeapon(CHESTBURSTER.FistWeapon) end
+			end
 		end
 		return plys
 	end
+
 
 	if CHESTBURSTER.RoundState == 1 then
 		if CheckForPlayers() >= 2 then
@@ -110,6 +114,10 @@ function CHESTBURSTER_Message(ply,ttype,msg,col,broadcast)
 	end
 end
 
+function CHESTBURSTER_UpdateDebug(ply)
+	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.Send(ply)
+end
+
 --[[-------------------------------------------------------------------------
 Add Chest ( Adds a chest spawn at your position )
 ---------------------------------------------------------------------------]]--
@@ -117,7 +125,7 @@ concommand.Add("chbu_addchest", function(ply,cmd,args)
 	if !ply:IsSuperAdmin() then return end
 	ply:PrintMessage(HUD_PRINTTALK,"Added a chest spawn at: "..tostring("x: "..ply:GetPos().x.." / y: "..ply:GetPos().y.." / z: "..ply:GetPos().z) )
 	table.insert(CHESTBURSTER.ChestSpawnTable,ply:GetPos())
-	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.Send(ply)
+	CHESTBURSTER_UpdateDebug(ply)
 end)
 
 --[[-------------------------------------------------------------------------
@@ -128,7 +136,7 @@ concommand.Add("chbu_removechest", function(ply,cmd,args)
 	local key = tonumber(args[1])
 	ply:PrintMessage(HUD_PRINTTALK,"Removed chest "..key)
 	table.remove(CHESTBURSTER.ChestSpawnTable,key)
-	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.Send(ply)
+	CHESTBURSTER_UpdateDebug(ply)
 end)
 
 --[[-------------------------------------------------------------------------
@@ -147,7 +155,7 @@ concommand.Add("chbu_loadmap", function(ply,cmd,args)
 	if !ply:IsSuperAdmin() then return end
 	ply:PrintMessage(HUD_PRINTTALK,"Attempted to load the map spawn data.")
 	CHESTBURSTER.LoadMapConfig()
-	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.Send(ply)
+	CHESTBURSTER_UpdateDebug(ply)
 end)
 
 --[[-------------------------------------------------------------------------
@@ -157,5 +165,38 @@ concommand.Add("chbu_clearchests", function(ply,cmd,args)
 	if !ply:IsSuperAdmin() then return end
 	ply:PrintMessage(HUD_PRINTTALK,"Cleared all chest spawn data.")
 	CHESTBURSTER.ChestSpawnTable = {}
-	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.Send(ply)
+	CHESTBURSTER_UpdateDebug(ply)
+end)
+
+--[[-------------------------------------------------------------------------
+Toggle Debug
+---------------------------------------------------------------------------]]--
+concommand.Add("chbu_debug", function(ply,cmd,args)
+	if !ply:IsSuperAdmin() then return end
+	ply:PrintMessage(HUD_PRINTTALK,"Debug toggled.")
+	if CHESTBURSTER.Debug == false then CHESTBURSTER.Debug = true CHESTBURSTER_UpdateDebug(ply) return end
+	if CHESTBURSTER.Debug == true then CHESTBURSTER.Debug = false CHESTBURSTER_UpdateDebug(ply) return end
+end)
+
+--[[-------------------------------------------------------------------------
+Help
+---------------------------------------------------------------------------]]--
+concommand.Add("chbu_help", function(ply,cmd,args)
+	print("----Chestburster Help----")
+	print("+--+--Controls:")
+	print("Tab / Scoreboard: Taunt")
+	print("R / Reload: Drop Weapon")
+	print("E / USE: Climb")
+	print("----")
+	print("+--+--How to Play:")
+	print("Knock out other players and collect gold from opening chests!")
+	print("Easy huh?")
+	print("----")
+	print("+--+--Console Commands:")
+	print("chbu_addchest - Adds a chest spawn to your position.")
+	print("chbu_savemap - Saves the map file.")
+	print("chbu_loadmap - Loads the map file if available.")
+	print("chbu_removechest (key) - Removes chest spawn by key in table ( look at numbers next to points in debug mode ).")
+	print("chbu_clearchests - Empties the chest spawn table. ( Removes all chest spawns )")
+	print("chbu_debug - Toggles debug mode, useful for placing spawns.")
 end)

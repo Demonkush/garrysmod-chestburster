@@ -10,6 +10,7 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then
 		phys:Wake()
+		phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 	end
 
 	self:SetElement("Fire")
@@ -19,8 +20,8 @@ end
 function ENT:Explode()
 	self:EmitSound("ambient/fire/mtov_flame2.wav",95,125)
 
-	for a, b in pairs(ents.FindInSphere(self:GetPos(),155)) do
-		CHESTBURSTER_PlayerDamage(25,self:GetElement(),b,b)
+	for a, b in pairs(ents.FindInSphere(self:GetPos(),175)) do
+		CHESTBURSTER_PlayerDamage(30,self:GetElement(),b,b)
 	end
 
 	local fx = EffectData() fx:SetOrigin( self:GetPos() )

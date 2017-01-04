@@ -10,7 +10,7 @@ function EFFECT:Init(data)
 		part:SetDieTime(2*scale)
 		part:SetColor(255,185,155) 
 	end
-	for i=0, 15 do
+	for i=0, 15*scale do
 		local part = emit:Add("particles/flamelet"..math.random(1,5),data:GetOrigin()+Vector(0,0,math.random(-32,32)))
 		part:SetVelocity(VectorRand()*Vector(math.random(-155,155),math.random(-155,155),115)*scale)
 		part:SetStartAlpha(255)

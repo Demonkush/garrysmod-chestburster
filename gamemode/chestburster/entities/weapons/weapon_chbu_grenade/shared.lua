@@ -17,7 +17,7 @@ SWEP.ViewModel          = "models/weapons/v_grenade.mdl"
 SWEP.WorldModel         = "models/weapons/w_grenade.mdl"
 
 SWEP.Primary.Sound 			= Sound("weapons/slam/throw.wav")
-SWEP.Primary.Damage 		= 15
+SWEP.Primary.Damage 		= 20
 SWEP.Primary.Delay 			= 1
 SWEP.Primary.ClipSize		= -1
 SWEP.Primary.DefaultClip	= -1

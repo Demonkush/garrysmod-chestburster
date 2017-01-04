@@ -14,10 +14,10 @@ SWEP.Spawnable 			= true
 SWEP.AdminSpawnable     = true
 
 SWEP.ViewModel          = "models/weapons/v_rpg.mdl"
-SWEP.WorldModel         = "models/weapons/w_rocketlauncher.mdl"
+SWEP.WorldModel         = "models/weapons/w_rocket_launcher.mdl"
 
 SWEP.Primary.Sound 			= Sound("npc/waste_scanner/grenade_fire.wav")
-SWEP.Primary.Damage 		= 15
+SWEP.Primary.Damage 		= 30
 SWEP.Primary.Delay 			= 2
 SWEP.Primary.ClipSize		= -1
 SWEP.Primary.DefaultClip	= -1

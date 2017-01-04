@@ -85,8 +85,9 @@ function CHESTBURSTER.RoundEnd()
 	if IsValid(players[2]) then table.insert(winning,{name=players[2]:Name(),gold=players[2]:GetNWInt("Gold"),kos=players[2]:GetNWInt("TotalKO"),kod=players[2]:GetNWInt("SelfKO")}) end
 	if IsValid(players[3]) then table.insert(winning,{name=players[3]:Name(),gold=players[3]:GetNWInt("Gold"),kos=players[3]:GetNWInt("TotalKO"),kod=players[3]:GetNWInt("SelfKO")}) end
 
-	CHESTBURSTER_Message(self, "Game", "The round is over!", Vector(255,215,215), true)
-	CHESTBURSTER_Message(self, "Game", players[1]:Name().." is the winner!", Vector(255,215,215), true)
+	CHESTBURSTER_Message(self, "Game", "The round is over!", Vector(215,215,215), true)
+
+	CHESTBURSTER_Message(self, "Game", players[1]:Name().." is the winner!", Vector(155,215,255), true)
 	net.Start("CHESTBURSTERROUNDWINNERS") net.WriteTable(winning) net.Broadcast()
 
 	if CHESTBURSTER.RoundNumber >= CHESTBURSTER.MaxRounds then

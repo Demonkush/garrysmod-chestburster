@@ -15,6 +15,7 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if IsValid(phys) then
 		phys:Wake()
+		phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
 	end
 
 	self.GoldAmount = 50

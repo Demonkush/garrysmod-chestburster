@@ -6,10 +6,10 @@ CHESTBURSTER.Elements[1] = {
 	name = "Fire",status = "Burning",
 	buffChance = 35,
 	color = Color(255,175,155,255),
-	time = 3,
+	time = 4,
 	onBuff = function(target,attacker)
 		if timer.Exists("CB_StatusFire"..target:EntIndex()) then return end
-		timer.Create("CB_StatusFire"..target:EntIndex(),1,3,function()
+		timer.Create("CB_StatusFire"..target:EntIndex(),1,4,function()
 			if IsValid(target) && target:Alive() then
 				target:SetNWBool("StatusFire",true)
 				local damp = 0 if target:GetNWBool("StatusWater") == true then damp = 7 end
@@ -26,6 +26,8 @@ CHESTBURSTER.Elements[1] = {
 	onDamage = function(target,attacker)
 		if IsValid(target) && target:Alive() then
 			local damp = 0 if target:GetNWBool("StatusWater") == true then damp = 7 end
+			local drychance = math.random(1,100) 
+			if drychance > 75 then CHESTBURSTER.Elements[5].ClearStatus(target) end
 
 			CHESTBURSTER_PlayerDamage(math.random(10,12)-damp,"Fire",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
@@ -49,10 +51,10 @@ CHESTBURSTER.Elements[2] = {
 	name = "Frost",status = "Freezing",
 	buffChance = 65,
 	color = Color(175,215,255,255),
-	time = 5,
+	time = 8,
 	onBuff = function(target,attacker)
 		if timer.Exists("CB_StatusFrost"..target:EntIndex()) then return end
-		timer.Create("CB_StatusFrost"..target:EntIndex(),1,5,function()
+		timer.Create("CB_StatusFrost"..target:EntIndex(),2,4,function()
 			if IsValid(target) && target:Alive() then
 				target:SetNWBool("StatusFrost",true)
 				local slowchance = math.random(1,100) if slowchance > 65 then target:Slow(7) end
@@ -132,17 +134,17 @@ CHESTBURSTER.Elements[4] = {
 	name = "Storm",status = "Electrified",
 	buffChance = 50,
 	color = Color(125,215,255,255),
-	time = 2,
+	time = 6,
 	onBuff = function(target,attacker)
 		if timer.Exists("CB_StatusStorm"..target:EntIndex()) then return end
-		timer.Create("CB_StatusStorm"..target:EntIndex(),3,1,function()
+		timer.Create("CB_StatusStorm"..target:EntIndex(),3,2,function()
 			if IsValid(target) && target:Alive() then
 				target:SetNWBool("StatusStorm",true)
-				target:SetEyeAngles(Angle(0,math.random(0,360),0))
-				local rvel = VectorRand()*50 target:SetVelocity(rvel)
+				local rvel = VectorRand()*150 target:SetVelocity(rvel+Vector(0,0,100))
 				target:EmitSound("ambient/machines/zap"..math.random(1,3)..".wav",100,100)
+				local add = 1 if target:GetNWBool("StatusWater") == true then add = 2 end
 
-				CHESTBURSTER_PlayerDamage(math.random(7,11),"Storm",target,attacker)
+				CHESTBURSTER_PlayerDamage(math.random(7,11)*add,"Storm",target,attacker)
 				local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
 				util.Effect( "fx_cb_stormpuff", fx )
 			else target:SetNWBool("StatusStorm",false) timer.Remove("CB_StatusStorm"..target) end
@@ -150,7 +152,9 @@ CHESTBURSTER.Elements[4] = {
 	end,
 	onDamage = function(target,attacker)
 		if IsValid(target) && target:Alive() then
-			CHESTBURSTER_PlayerDamage(math.random(5,8),"Storm",target,attacker)
+			local rvel = VectorRand()*200 target:SetVelocity(rvel+Vector(0,0,150))
+			local add = 1 if target:GetNWBool("StatusWater") == true then add = 2 end
+			CHESTBURSTER_PlayerDamage(math.random(5,8)*add,"Storm",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
 			util.Effect( "fx_cb_stormpuff", fx )
 		end
@@ -172,10 +176,10 @@ CHESTBURSTER.Elements[5] = {
 	name = "Water",status = "Soaked",
 	buffChance = 50,
 	color = Color(155,155,255,255),
-	time = 9,
+	time = 10,
 	onBuff = function(target,attacker)
 		if timer.Exists("CB_StatusWater"..target:EntIndex()) then return end
-		timer.Create("CB_StatusWater"..target:EntIndex(),9,1,function()
+		timer.Create("CB_StatusWater"..target:EntIndex(),5,2,function()
 			if IsValid(target) && target:Alive() then
 				target:SetNWBool("StatusWater",true)
 				target:EmitSound("ambient/water/drip"..math.random(1,4)..".wav",100,50)

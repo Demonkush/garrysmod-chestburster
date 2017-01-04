@@ -113,9 +113,9 @@ end
 
 function GM:PlayerCanPickupWeapon(ply,wep)
 	if ply:GetNWBool("KnockedOut") == true then return false end
-	if ply:HasWeapon(CHESTBURSTER.FistWeapon) then return false end
+	if ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply:GetActiveWeapon():Remove() ply:Give(wep:GetClass()) ply:SelectWeapon(wep:GetClass()) return true end
 	if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then return true end
-	if ply.AssignedWeapon == wep then return true end
+	if ply.AssignedWeapon == wep or ply.Assignedweapon == nil then return true end
 	return false
 end
 
@@ -210,7 +210,7 @@ function GM:EntityTakeDamage(target,dmginfo)
 	if attacker:GetActiveWeapon():GetClass() == CHESTBURSTER.FistWeapon then
 		CHESTBURSTER_PlayerDamage(CHESTBURSTER.FistDamage,"Physical",target,dmginfo:GetAttacker())
 		local diff = target:GetPos()-attacker:GetPos()
-		target:SetVelocity((diff*CHESTBURSTER.FistPower)+Vector(0,0,0.5*CHESTBURSTER.FistPower))
+		target:SetVelocity((diff*CHESTBURSTER.FistPower)+Vector(0,0,2*CHESTBURSTER.FistPower))
 	end
 	return true
 end
@@ -346,9 +346,9 @@ function player:ResetMovementSpeed()
 end
 
 function player:Taunt()
-	local pitch = 135
+	local pitch = 130
 	if self.NextTaunt < CurTime() then
-		if self:GetNWInt("KO") < (self:GetNWInt("KOMax")/2) then pitch = 95 end
+		if self:GetNWInt("KO") < (self:GetNWInt("KOMax")/2) then pitch = 90 end
 		self:EmitSound(table.Random(CHESTBURSTER.Taunts),100,pitch)	
 		self.NextTaunt = CurTime() + 6
 	end
@@ -376,6 +376,27 @@ function player:Climb()
 			end
 		end
 	end
+end
+
+function CHESTBURSTER.DoTesla(pos)
+	local tes = ents.Create("point_tesla")
+	tes:SetPos(pos)
+	tes:SetKeyValue("m_SoundName","")
+	tes:SetKeyValue("texture","sprites/bluelaser1.spr")
+	tes:SetKeyValue("m_Color","155 215 255")
+	tes:SetKeyValue("m_flRadius","155")
+	tes:SetKeyValue("beamcount_min","2")
+	tes:SetKeyValue("beamcount_max","3")
+	tes:SetKeyValue("thick_min","16")
+	tes:SetKeyValue("thick_max","32")
+	tes:SetKeyValue("lifetime_min","0.3")
+	tes:SetKeyValue("lifetime_max","0.5")
+	tes:SetKeyValue("interval_min","0.1")
+	tes:SetKeyValue("interval_max","0.3")
+	tes:Spawn()
+	tes:Fire("DoSpark","",0.3)
+	tes:Fire("DoSpark","",0.5)
+	tes:Fire("kill","",0.6)
 end
 
 function CHESTBURSTER.KeyPress(ply,key)

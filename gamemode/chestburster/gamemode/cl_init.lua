@@ -79,7 +79,7 @@ function CHESTBURSTER_DrawPlayerBar()
 end
 
 function CHESTBURSTER_DrawHUD()
-	draw.SimpleTextOutlined("CHESTBURSTER, by Demonkush","Trebuchet18",5,30,Color(255,255,255,55),TEXT_ALIGN_LEFT,TEXT_ALIGN_TOP,1,Color(0,0,0,55))
+	draw.SimpleTextOutlined("CHESTBURSTER "..CHESTBURSTER.Version..", by Demonkush","Trebuchet18",5,30,Color(255,255,255,55),TEXT_ALIGN_LEFT,TEXT_ALIGN_TOP,1,Color(0,0,0,55))
 
 	-- Spectator
 	if LocalPlayer():GetNWBool("Spectating") == true then
@@ -141,9 +141,9 @@ net.Receive("CHESTBURSTERROUNDTIMER",function(len)
 end)
 
 function CHESTBURSTER_EndRoundScoreboard(winners)
-	print("[CHBU_DEBUG] End Round Scoreboard")
-	PrintTable(winners)
-	if winners[1] then print("[Winner!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod) end
+	--print("[CHBU_DEBUG] End Round Scoreboard")
+	--PrintTable(winners)
+	if winners[1] then print("[1st Place!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod) end
 	if winners[2] then print("[2nd Place!~] "..winners[2].name.." || Gold: "..winners[2].gold.." || KOs: "..winners[2].kos.." || KO'd: "..winners[2].kod) end
 	if winners[3] then print("[3rd Place!~] "..winners[3].name.." || Gold: "..winners[3].gold.." || KOs: "..winners[3].kos.." || KO'd: "..winners[3].kod) end
 
@@ -161,7 +161,7 @@ function CHESTBURSTER_EndRoundScoreboard(winners)
 		local Winner1 = vgui.Create("DLabel",EndRoundScoreboard)
 		Winner1:SetPos(15,50)
 		Winner1:SetFont("Trebuchet24") Winner1:SetTextColor(Color(255,215,155,255))
-		Winner1:SetText("[Winner!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || Knockouts: "..winners[1].kos.." || Knocked Out: "..winners[1].kod)
+		Winner1:SetText("[1st Place!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod)
 		Winner1:SetContentAlignment(5) Winner1:SizeToContents()
 	end
 	if winners[2] then
@@ -240,7 +240,7 @@ function CHESTBURSTER_Blind(time)
 	blind:SetPos(0,0)
 	blind:SetSize(ScrW(),ScrH())
 	blind.Paint = function()
-		surface.SetDrawColor(0,0,0,245)
+		surface.SetDrawColor(0,0,0,253)
 		surface.DrawRect(0,0,ScrW(),ScrH())
 	end
 
