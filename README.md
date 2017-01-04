@@ -14,6 +14,12 @@ Weapons, powerups and gold can be obtained from chests. Some chests are trapped 
 Default map change settings use mapcycle.txt, see shared.lua for more info. Included are mapcycles for CS:S and HL2DM maps, as well as spawn files for each map. Enjoy.
 
 
+Controls
+
+TAB/Scoreboard - Taunt
+R/Reload - Drop Weapon
+E/USE - Climb
+
 
 Configuration Help
 
