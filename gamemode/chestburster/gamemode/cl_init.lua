@@ -101,11 +101,11 @@ function CHESTBURSTER_DrawHUD()
 	local kometer = ko/komax*250
 	local kocolor = Color(155+ko,215-ko,155-ko,55)
 	if LocalPlayer():GetNWBool("KnockedOut") == true then
-		kocolor = Color(255,105,105,55)
+		kocolor = Color(255,105,105,125)
 		kometer = 0
 		draw.SimpleTextOutlined("Knocked Out!","Trebuchet24",ScrW()/2,ScrH()-70,Color(215,55,55,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,155))
 	end
-	surface.SetDrawColor(0,0,0,155) surface.DrawRect(sw/2-127,ScrH()-77,254,29)
+	surface.SetDrawColor(0,0,0,225) surface.DrawRect(sw/2-127,ScrH()-77,254,29)
 	surface.SetDrawColor(kocolor)
 	surface.DrawRect(sw/2-125,ScrH()-75,kometer,25)
 	draw.SimpleTextOutlined("KO Meter","DermaLarge",ScrW()/2,ScrH()-90,Color(155+ko,155,155-ko,215),TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP,1,Color(0,0,0,155))
@@ -143,9 +143,9 @@ end)
 function CHESTBURSTER_EndRoundScoreboard(winners)
 	--print("[CHBU_DEBUG] End Round Scoreboard")
 	--PrintTable(winners)
-	if winners[1] then print("[1st Place!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod) end
-	if winners[2] then print("[2nd Place!~] "..winners[2].name.." || Gold: "..winners[2].gold.." || KOs: "..winners[2].kos.." || KO'd: "..winners[2].kod) end
-	if winners[3] then print("[3rd Place!~] "..winners[3].name.." || Gold: "..winners[3].gold.." || KOs: "..winners[3].kos.." || KO'd: "..winners[3].kod) end
+	if winners[1] then print("[1st Place!~] "..winners[1].ply:Name().." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod) end
+	if winners[2] then print("[2nd Place!~] "..winners[2].ply:Name().." || Gold: "..winners[2].gold.." || KOs: "..winners[2].kos.." || KO'd: "..winners[2].kod) end
+	if winners[3] then print("[3rd Place!~] "..winners[3].ply:Name().." || Gold: "..winners[3].gold.." || KOs: "..winners[3].kos.." || KO'd: "..winners[3].kod) end
 
 	local EndRoundScoreboard = vgui.Create("DFrame")
 	EndRoundScoreboard:SetPos(ScrW()/2-400,ScrH()/2-300)
@@ -161,21 +161,21 @@ function CHESTBURSTER_EndRoundScoreboard(winners)
 		local Winner1 = vgui.Create("DLabel",EndRoundScoreboard)
 		Winner1:SetPos(15,50)
 		Winner1:SetFont("Trebuchet24") Winner1:SetTextColor(Color(255,215,155,255))
-		Winner1:SetText("[1st Place!~] "..winners[1].name.." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod)
+		Winner1:SetText("[1st Place!~] "..winners[1].ply:Name().." || Gold: "..winners[1].gold.." || KOs: "..winners[1].kos.." || KO'd: "..winners[1].kod)
 		Winner1:SetContentAlignment(5) Winner1:SizeToContents()
 	end
 	if winners[2] then
 		local Winner2 = vgui.Create("DLabel",EndRoundScoreboard)
 		Winner2:SetPos(55,100)
 		Winner2:SetFont("Trebuchet18") Winner2:SetTextColor(Color(215,255,155,215))
-		Winner2:SetText("[2nd Place!~] "..winners[2].name.." || Gold: "..winners[2].gold.." || KOs: "..winners[2].kos.." || KO'd: "..winners[2].kod)
+		Winner2:SetText("[2nd Place!~] "..winners[2].ply:Name().." || Gold: "..winners[2].gold.." || KOs: "..winners[2].kos.." || KO'd: "..winners[2].kod)
 		Winner2:SetContentAlignment(5) Winner2:SizeToContents()
 	end
 	if winners[3] then
 		local Winner3 = vgui.Create("DLabel",EndRoundScoreboard)
 		Winner3:SetPos(55,150)
 		Winner3:SetFont("Trebuchet18") Winner3:SetTextColor(Color(215,215,215,185))
-		Winner3:SetText("[3rd Place!~] "..winners[3].name.." || Gold: "..winners[3].gold.." || KOs: "..winners[3].kos.." || KO'd: "..winners[3].kod)
+		Winner3:SetText("[3rd Place!~] "..winners[3].ply:Name().." || Gold: "..winners[3].gold.." || KOs: "..winners[3].kos.." || KO'd: "..winners[3].kod)
 		Winner3:SetContentAlignment(5) Winner3:SizeToContents()
 	end
 

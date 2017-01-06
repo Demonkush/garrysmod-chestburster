@@ -27,14 +27,19 @@ end
 function ENT:Explode()
 	self:EmitSound("ambient/energy/zap"..math.random(1,9)..".wav",95,125)
 
-	for a, b in pairs(ents.FindInSphere(self:GetPos(),175)) do
+	for a, b in pairs(ents.FindInSphere(self:GetPos(),135)) do
 		if b != self:GetOwner() then
 			CHESTBURSTER_PlayerDamage(self.Damage,self:GetElement(),b,self:GetOwner())
+		end
+		if !b:IsPlayer() then
+			local dmg = DamageInfo()
+			dmg:SetDamage(25)
+			b:TakeDamageInfo(dmg)
 		end
 	end
 
 	local fx = EffectData() fx:SetOrigin( self:GetPos() ) fx:SetScale(1)
-	util.Effect( self.ImpactEffect, fx )
+	util.Effect( self.ImpactEffect, fx ,true,true)
 
 	if self:GetElement() == "Storm" then
 		CHESTBURSTER.DoTesla(self:GetPos())

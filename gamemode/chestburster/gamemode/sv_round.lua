@@ -34,9 +34,19 @@ function CHESTBURSTER.RoundTimerFunc(mode)
 	net.Broadcast()
 end
 
+function CHESTBURSTER.CleanUpMap()
+	game.CleanUpMap()
+	local rements = {"chbu_chest","chbu_gold","chbu_mimic"}
+	for a, b in pairs(ents.GetAll()) do
+		if table.HasValue(rements,b:GetClass()) then b:Remove() end
+		if string.match(b:GetClass(),"weapon_") && b:GetOwner() == nil then b:Remove() end
+	end
+end
+
 -- Pre Round = 1, Active Round = 2, Post Round = 3
 function CHESTBURSTER.RoundStart()
-	game.CleanUpMap()
+	CHESTBURSTER.CleanUpMap()
+	CHESTBURSTER.LoadMapConfig()
 	CHESTBURSTER.RoundNumber = CHESTBURSTER.RoundNumber + 1
 	CHESTBURSTER.RoundState = 2
 	CHESTBURSTER.RoundTimerFunc(1)
@@ -51,22 +61,38 @@ function CHESTBURSTER.RoundStart()
 		if v:GetNWBool("SpawnNextRound") == true then v:Spawn() CHESTBURSTER.PlayerReset(v) end
 	end
 
-	net.Start("CHESTBURSTERROUNDINFO")
-		net.WriteInt(CHESTBURSTER.RoundState,8)
-		net.WriteBool(true)
-	net.Broadcast()
+	CHESTBURSTER.SendRoundInfo(true)
 end
 
 function CHESTBURSTER.GameRestart()
 	CHESTBURSTER.RoundState = 1
+	CHESTBURSTER.RoundNumber = 0
+	CHESTBURSTER.RoundTimerFunc(2)
+	CHESTBURSTER.SendRoundInfo(false)
+	CHESTBURSTER_Message(self, "Game", "Round ending, not enough players to continue!", Vector(255,215,215), true)
+end
+
+function CHESTBURSTER.FullGameRestart()
+	CHESTBURSTER.CleanUpMap()
+	gamemode.RoundTickDelay = CurTime() + 5
+
+	for k, v in pairs(player.GetAll()) do
+		v:Spawn() CHESTBURSTER.PlayerReset(v,1)
+	end
+
+	CHESTBURSTER.RoundState = 1
+	CHESTBURSTER.RoundNumber = 0
 	CHESTBURSTER.RoundTimerFunc(2)
 
+	CHESTBURSTER.SendRoundInfo(false)
+	CHESTBURSTER_Message(self, "Game", "The game was reset! Will restart in 5 seconds...", Vector(215,255,175), true)
+end
+
+function CHESTBURSTER.SendRoundInfo(mode)
 	net.Start("CHESTBURSTERROUNDINFO")
 		net.WriteInt(CHESTBURSTER.RoundState,8)
-		net.WriteBool(false)
+		net.WriteBool(mode)
 	net.Broadcast()
-
-	CHESTBURSTER_Message(self, "Game", "Round ending, not enough players to continue!", Vector(255,215,215), true)
 end
 
 function CHESTBURSTER.RoundEnd()
@@ -81,15 +107,24 @@ function CHESTBURSTER.RoundEnd()
 	table.sort(players,function(a,b) return a:GetNWInt("Gold")>b:GetNWInt("Gold") end)
 
 	local winning = {}
-	if IsValid(players[1]) then table.insert(winning,{name=players[1]:Name(),gold=players[1]:GetNWInt("Gold"),kos=players[1]:GetNWInt("TotalKO"),kod=players[1]:GetNWInt("SelfKO")}) end
-	if IsValid(players[2]) then table.insert(winning,{name=players[2]:Name(),gold=players[2]:GetNWInt("Gold"),kos=players[2]:GetNWInt("TotalKO"),kod=players[2]:GetNWInt("SelfKO")}) end
-	if IsValid(players[3]) then table.insert(winning,{name=players[3]:Name(),gold=players[3]:GetNWInt("Gold"),kos=players[3]:GetNWInt("TotalKO"),kod=players[3]:GetNWInt("SelfKO")}) end
+	if IsValid(players[1]) then table.insert(winning,{ply=players[1],gold=players[1]:GetNWInt("Gold"),kos=players[1]:GetNWInt("TotalKO"),kod=players[1]:GetNWInt("SelfKO")}) end
+	if IsValid(players[2]) then table.insert(winning,{ply=players[2],gold=players[2]:GetNWInt("Gold"),kos=players[2]:GetNWInt("TotalKO"),kod=players[2]:GetNWInt("SelfKO")}) end
+	if IsValid(players[3]) then table.insert(winning,{ply=players[3],gold=players[3]:GetNWInt("Gold"),kos=players[3]:GetNWInt("TotalKO"),kod=players[3]:GetNWInt("SelfKO")}) end
 
 	CHESTBURSTER_Message(self, "Game", "The round is over!", Vector(215,215,215), true)
 
-	CHESTBURSTER_Message(self, "Game", players[1]:Name().." is the winner!", Vector(155,215,255), true)
-	net.Start("CHESTBURSTERROUNDWINNERS") net.WriteTable(winning) net.Broadcast()
-
+	if IsValid(winning[1].ply) then
+		if winning[1].gold > 0 then
+			winning[1].ply:AddFrags(1)
+			CHESTBURSTER_Message(self, "Game", winning[1].ply:Name().." is the winner!", Vector(155,215,255), true)
+			net.Start("CHESTBURSTERROUNDWINNERS") net.WriteTable(winning) net.Broadcast()
+		end
+		if winning[2] && IsValid(winning[2].ply) then
+			if winning[1].gold > 0 && winning[1].gold == winning[2].gold then
+				CHESTBURSTER_Message(self, "Game", "It was a tie!", Vector(215,215,115), true)
+			end
+		end
+	end
 	if CHESTBURSTER.RoundNumber >= CHESTBURSTER.MaxRounds then
 		CHESTBURSTER_Message(self, "Game", "The game is over! Map is changing!", Vector(255,215,215), true)
 		CHESTBURSTER.ChangeMap()

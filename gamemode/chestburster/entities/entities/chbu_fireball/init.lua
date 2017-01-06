@@ -21,11 +21,22 @@ function ENT:Explode()
 	self:EmitSound("ambient/fire/mtov_flame2.wav",95,125)
 
 	for a, b in pairs(ents.FindInSphere(self:GetPos(),175)) do
-		CHESTBURSTER_PlayerDamage(30,self:GetElement(),b,b)
+		if b:IsPlayer() then
+			local r = math.random(1,100)
+			if r > 50 then
+				CHESTBURSTER.Elements[1].onBuff(b,self)
+			end
+			CHESTBURSTER_PlayerDamage(30,self:GetElement(),b,self)
+		end
+		if !b:IsPlayer() then
+			local dmg = DamageInfo()
+			dmg:SetDamage(25)
+			b:TakeDamageInfo(dmg)
+		end
 	end
 
 	local fx = EffectData() fx:SetOrigin( self:GetPos() )
-	util.Effect( "fx_chbu_volcano", fx )
+	util.Effect( "fx_chbu_volcano", fx ,true,true)
 
 	self:Remove()
 end

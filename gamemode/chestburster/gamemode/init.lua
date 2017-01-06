@@ -30,13 +30,21 @@ function GM:Initialize()
 	gamemode.ChestSpawnDelay = 5
 	gamemode.PlayerKODelay = 2
 	CHESTBURSTER.LoadMapConfig()
-	timer.Create("CleanupHL2DM",3,3,function() CleanupHL2DM() end)
+	timer.Create("CHBUPrelimSetup",3,3,function() CHBUPreSetup() end)
 end
 
-function CleanupHL2DM()
+function CHBUPreSetup()
 	for k,v in pairs(ents.GetAll()) do
-		if string.match(v:GetClass(),"item_") then v:Remove() end
-		if string.match(v:GetClass(),"weapon_") then v:Remove() end
+		if string.match(v:GetClass(),"weapon_chbu") == false or string.match(v:GetClass(),"weapon_fists") == false then		
+			if string.match(v:GetClass(),"item_") then v:Remove() end
+			if string.match(v:GetClass(),"weapon_") then v:Remove() end
+			if string.match(v:GetClass(),"prop_physics") then
+				local phys = v:GetPhysicsObject()
+				if IsValid(phys) then
+					phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
+				end
+			end
+		end
 	end
 end
 
@@ -74,9 +82,6 @@ function CHESTBURSTER.RoundTick()
 		for k, v in pairs(player.GetAll()) do
 			if v:GetNWBool("Spectating") == true then
 				plys = plys - 1
-			end
-			if v.AssignedWeapon == nil then
-				if !v:HasWeapon(CHESTBURSTER.FistWeapon) then v:Give(CHESTBURSTER.FistWeapon) v:SelectWeapon(CHESTBURSTER.FistWeapon) end
 			end
 		end
 		return plys
@@ -179,6 +184,13 @@ concommand.Add("chbu_debug", function(ply,cmd,args)
 end)
 
 --[[-------------------------------------------------------------------------
+Game Restart
+---------------------------------------------------------------------------]]--
+concommand.Add("chbu_restartgame", function(ply,cmd,args)
+	if !ply:IsSuperAdmin() then return end CHESTBURSTER.FullGameRestart()
+end)
+
+--[[-------------------------------------------------------------------------
 Help
 ---------------------------------------------------------------------------]]--
 concommand.Add("chbu_help", function(ply,cmd,args)
@@ -191,12 +203,4 @@ concommand.Add("chbu_help", function(ply,cmd,args)
 	print("+--+--How to Play:")
 	print("Knock out other players and collect gold from opening chests!")
 	print("Easy huh?")
-	print("----")
-	print("+--+--Console Commands:")
-	print("chbu_addchest - Adds a chest spawn to your position.")
-	print("chbu_savemap - Saves the map file.")
-	print("chbu_loadmap - Loads the map file if available.")
-	print("chbu_removechest (key) - Removes chest spawn by key in table ( look at numbers next to points in debug mode ).")
-	print("chbu_clearchests - Empties the chest spawn table. ( Removes all chest spawns )")
-	print("chbu_debug - Toggles debug mode, useful for placing spawns.")
 end)

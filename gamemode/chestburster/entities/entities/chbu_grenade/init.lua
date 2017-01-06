@@ -34,14 +34,19 @@ end
 function ENT:Explode()
 	self:EmitSound("npc/roller/mine/rmine_explode_shock1.wav")
 
-	for a, b in pairs(ents.FindInSphere(self:GetPos(),255)) do
+	for a, b in pairs(ents.FindInSphere(self:GetPos(),235)) do
 		if b != self:GetOwner() then
 			CHESTBURSTER_PlayerDamage(self.Damage,self:GetElement(),b,self:GetOwner())
+		end
+		if !b:IsPlayer() then
+			local dmg = DamageInfo()
+			dmg:SetDamage(40)
+			b:TakeDamageInfo(dmg)
 		end
 	end
 
 	local fx = EffectData() fx:SetOrigin( self:GetPos() ) fx:SetScale(2)
-	util.Effect( self.ImpactEffect, fx )
+	util.Effect( self.ImpactEffect, fx ,true,true)
 
 	if self:GetElement() == "Storm" then
 		CHESTBURSTER.DoTesla(self:GetPos())
@@ -64,6 +69,7 @@ end
 
 function ENT:Touch(ent)
 	if ent:IsPlayer() then
+		self:SetSolid( SOLID_NONE )
 		self:SetVelocity(Vector(0,0,0))
 		self:SetParent(ent)
 	end

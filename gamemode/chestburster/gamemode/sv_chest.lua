@@ -2,7 +2,7 @@ function CHESTBURSTER.OpenChest(ply,chest)
 	if !IsValid(chest) then return end
 	if CHESTBURSTER.RoundState == 3 then return end
 	--CHESTBURSTER.RespawnChest(chest:GetPos(),chest:GetAngles())
-
+	
 	chest.Opened = true
 
 	chest:EmitSound("plats/hall_elev_door.wav",85,85)
@@ -33,7 +33,7 @@ function CHESTBURSTER.OpenChest(ply,chest)
 
 	chest:EmitSound(table.Random(CHESTBURSTER.ChestSounds),100,100)
 
-	if ply.AssignedWeapon == nil then
+	if ply.AssignedWeapon == nil or ply.AssignedWeapon != ply:GetActiveWeapon() then
 		if r <= CHESTBURSTER.WeaponChance then
 			local awr = math.random(1,#CHESTBURSTER.Weapons) CHESTBURSTER.GiveWeapon(ply,awr)
 		end
@@ -47,7 +47,6 @@ function CHESTBURSTER.OpenChest(ply,chest)
 	end)
 
 	CHESTBURSTER.CollectGold(ply,gr)
-	ply:PrintMessage(HUD_PRINTTALK,"Received "..gr.." gold!")
 	timer.Simple(1,function() if IsValid(chest) then chest:Remove() end end)
 end
 --[[

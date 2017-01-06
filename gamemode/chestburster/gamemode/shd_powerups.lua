@@ -20,7 +20,7 @@ CHESTBURSTER.Powerups[2] = {
 	color = Color(215,185,155),
 	time = 25,
 	onPickup = function(ply)
-		ply:SetNWInt("DamageResistance",5)
+		ply:SetNWInt("DamageResistance",10)
 	end,
 	onExpire = function(ply)
 		ply:SetNWInt("DamageResistance",0)
@@ -105,9 +105,9 @@ CHESTBURSTER.Powerups[8] = {
 }
 CHESTBURSTER.Powerups[9] = {
 	name = "Extra KO",
-	desc = "Gained 50 extra KO power for 25 seconds!",
+	desc = "Gained 50 extra KO power for 45 seconds!",
 	color = Color(215,255,155),
-	time = 25,
+	time = 45,
 	onPickup = function(ply)
 		ply:SetNWInt("KOMax",CHESTBURSTER.KOMax+50)
 	end,
@@ -134,7 +134,7 @@ CHESTBURSTER.Powerups[11] = {
 	name = "Detection",
 	desc = "Gained detection of players and chests for 25 seconds!",
 	color = Color(215,255,155),
-	time = 25,
+	time = 35,
 	onPickup = function(ply)
 		ply:Detection(25)
 	end,

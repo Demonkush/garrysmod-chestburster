@@ -35,14 +35,13 @@ SWEP.Secondary.Ammo           = "none"
 
 SWEP.Element = "None"
 
-SWEP.ImpactEffect = "fx_chbu_normpuff"
-
 SWEP.Projectile = "chbu_grenade"
 SWEP.ProjectilePower = 600
 SWEP.ProjectileGravity = true
 
 function SWEP:SetupDataTables()
 	self:NetworkVar("String",0,"Element")
+	self:NetworkVar("String",0,"ImpactEffect")
 end
 
 function SWEP:Initialize()
@@ -50,6 +49,7 @@ function SWEP:Initialize()
 
 	self:SetHoldType(self.HoldType)
 	self:SetElement("None")
+	self:SetImpactEffect("fx_chbu_normpuff")
 end
 
 function SWEP:Deploy()
@@ -87,7 +87,7 @@ function SWEP:CHBU_BulletAttack()
 			end
 		end
 		local fx = EffectData() fx:SetOrigin( tr.HitPos ) fx:SetScale(1)
-		util.Effect( self.ImpactEffect, fx )
+		util.Effect( self:GetImpactEffect(), fx ,true,true)
 	end
 	self.Owner:FireBullets(bullet)
 
@@ -114,7 +114,7 @@ function SWEP:CHBU_ProjectileAttack()
 
 		proj:SetElement(self:GetElement())
 		proj.Damage = self.Primary.Damage
-		proj.ImpactEffect = self.ImpactEffect
+		proj.ImpactEffect = self:GetImpactEffect()
 
 		proj:SetElementColor()
 

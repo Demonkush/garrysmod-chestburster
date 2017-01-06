@@ -8,12 +8,9 @@ CHESTBURSTER.Trap[1] = {
 		if IsValid(chest) then
 			chest:EmitSound("ambient/wind/wind_hit1.wav")
 			chest:DoFX("fx_chbu_poisongas")
-			for k, v in pairs(ents.FindInSphere(chest:GetPos(),155)) do
+			for k, v in pairs(ents.FindInSphere(chest:GetPos(),225)) do
 				if IsValid(v) && v:IsPlayer() then
-					CHESTBURSTER.Elements[3].onBuff(v,v)
-					net.Start("CHESTBURSTERSENDSTATUS")
-						net.WriteString("Poisoned")	net.WriteInt(CHESTBURSTER.Elements[3].time,32)
-					net.Send(ply)
+					CHESTBURSTER.Elements[3].onBuff(v,chest)
 				end
 			end
 
@@ -30,7 +27,7 @@ CHESTBURSTER.Trap[2] = {
 			util.Effect("Explosion",effectdata,true,true)
 			for k, v in pairs(ents.FindInSphere(chest:GetPos(),255)) do
 				if v:IsPlayer() then
-					CHESTBURSTER_PlayerDamage(45,"Fire",v,v)
+					CHESTBURSTER_PlayerDamage(45,"Fire",v,chest)
 				end
 			end
 			chest:Remove()
@@ -45,6 +42,7 @@ CHESTBURSTER.Trap[3] = {
 		mimic:SetPos(chest:GetPos()) mimic:SetAngles(chest:GetAngles())
 		mimic:Spawn()
 		mimic:SetModel(chest:GetModel())
+		mimic:SetColor(Color(255,55,55,255))
 		chest:DoFX("fx_chbu_bloodpuff")
 		chest:Remove()
 		timer.Create("Mimic"..math.random(1,10000),1,15,function()
@@ -64,7 +62,7 @@ CHESTBURSTER.Trap[4] = {
 	doTrap = function(ply,chest)
 		if IsValid(chest) then
 			ply:EmitSound("vo/npc/male01/ohno.wav")
-			ply:Blind(3)
+			ply:Blind(6)
 			chest:DoFX("fx_chbu_shadows")
 			timer.Simple(3,function() if IsValid(chest) then chest:Remove() end end)
 		end
@@ -84,7 +82,7 @@ CHESTBURSTER.Trap[5] = {
 CHESTBURSTER.Trap[6] = {
 	name = "Volcano",
 	doTrap = function(ply,chest)
-		timer.Create("cb_volcano"..math.random(1,100),1,7,function()
+		timer.Create("cb_volcano"..math.random(1,10000),1,7,function()
 			if IsValid(chest) then
 				chest:EmitSound("weapons/underwater_explode4.wav",85,125)
 				chest:DoFX("fx_chbu_volcano")
@@ -102,12 +100,15 @@ CHESTBURSTER.Trap[7] = {
 		ply:EmitSound("vo/npc/male01/hacks01.wav")
 		for i=1, 3 do
 			local swarm = ents.Create("chbu_mimic")
-			swarm:SetPos(chest:GetPos()+(VectorRand()*25)) swarm:SetAngles(AngleRand())
+			swarm:SetPos(chest:GetPos()+Vector(0,0,64)+(VectorRand()*25)) swarm:SetAngles(AngleRand())
 			swarm:Spawn()
 			swarm:SetModel("models/hunter/blocks/cube05x05x05.mdl")
+			swarm:SetColor(Color(255,55,55,255))
+			swarm.Damage = 7
+			swarm.HP = 10
 			chest:DoFX("fx_chbu_bloodpuff")
 			chest:Remove()
-			timer.Create("Swarm"..math.random(1,10000),1,15,function()
+			timer.Create("Swarm"..math.random(1,10000),1.5,10,function()
 				if IsValid(swarm) then
 					swarm:EmitSound("npc/fast_zombie/wake1.wav",85,math.random(100,125))
 					local phys = swarm:GetPhysicsObject()
@@ -116,7 +117,7 @@ CHESTBURSTER.Trap[7] = {
 					end
 				end
 			end)
-			timer.Simple(15,function() if IsValid(swarm) then swarm:Remove() end end)
+			timer.Simple(10,function() if IsValid(swarm) then swarm:Remove() end end)
 		end
 	end
 }

@@ -1,19 +1,32 @@
-function CHESTBURSTER.PlayerReset(ply)
-	ply:StripWeapons()
+function CHESTBURSTER.PlayerReset(ply,mode)
 	if ply:GetNWBool("Spectating") == true then ply:UnSpectate() ply:SetNWBool("Spectating",false) end
-	ply:SetNWBool("SpawnNextRound",true)
-
+	ply:SetNWBool("SpawnNextRound",true)	
+	ply:StripWeapons()
 	ply.AssignedWeapon = nil
-	ply.NextTaunt = 0
+
+	ply:SetModel(table.Random(CHESTBURSTER.Playermodels))
+
+	ply:SetupHands()
+	ply:Give(CHESTBURSTER.FistWeapon)
+
+	-- Send Clientside stuff ( only on initial, could interrupt auto round system )
+	if mode == 1 then
+		CHESTBURSTER.SendRoundInfo(true)
+		CHESTBURSTER.RoundTimerFunc()
+	end
 
 	ply:SetNWBool("KnockedOut",false)
 	ply:SetNWBool("KOImmunity",false)
 	ply:SetNWInt("KO",0)
 	ply:SetNWInt("KOMax",CHESTBURSTER.KOMax)	-- Total amount of KO power before you are KO'd, can be amplified with powerups.
+	ply:SetNWInt("PowerRecovery",0) -- When this hits PowerRecoveryMax, you'll receive a powerup.
 
 	ply:SetNWInt("TotalKO",0) 		-- KO's against other players
 	ply:SetNWInt("SelfKO",0) 		-- KO's against yourself
 	ply:SetNWInt("Gold",0)			-- Total Gold collected
+
+	ply:SetNWInt("DamageMultiplier",1)
+	ply:SetNWInt("DamageResistance",0)
 
 	ply.BaseWalkSpeed 	= 215
 	ply.BaseRunSpeed 	= 355
@@ -23,50 +36,48 @@ function CHESTBURSTER.PlayerReset(ply)
 	ply:SetRunSpeed(ply.BaseRunSpeed)
 	ply:SetCrouchedWalkSpeed(ply.BaseCrouchSpeed)
 
-	-- Stupid hands
-	local oldhands = ply:GetHands()
-	if ( IsValid( oldhands ) ) then oldhands:Remove() end
-	ply:SetupHands()
-
-	ply:SetNWInt("DamageMultiplier",1)
-	ply:SetNWInt("DamageResistance",0)
+	CHESTBURSTER.ClearElementalStatus(ply)
 
 	-- Fire: Powerful but short DoT
 	-- Frost: Slowing / Freezing
 	-- Poison: Weak but long DoT
 	-- Storm: Disorientating
 	-- Water: Amplifier / Dampener ( If wet, storm attacks are stronger but fire attacks are weaker )
-
 	ply:SetNWBool("ImbueFire",false)
 	ply:SetNWBool("ImbueFrost",false)
 	ply:SetNWBool("ImbuePoison",false)
 	ply:SetNWBool("ImbueStorm",false)
 	ply:SetNWBool("ImbueWater",false)
-
-	ply:SetModel(table.Random(CHESTBURSTER.Playermodels))
-
-	ply:Give(CHESTBURSTER.FistWeapon)
-
-	CHESTBURSTER.ClearElementalStatus(ply)
 end
 
-function GM:PlayerInitialSpawn(ply) CHESTBURSTER.PlayerReset(ply) end
-function GM:PlayerSpawn(ply) CHESTBURSTER.PlayerReset(ply) end
+function GM:PlayerInitialSpawn(ply) 	
+	ply:GodEnable()
+	ply.NextTaunt = 0
+	ply.NextPickup = 0
+	timer.Simple(1,function()
+		if IsValid(ply) then CHESTBURSTER.PlayerReset(ply,1) end
+	end)
+end
+function GM:PlayerSpawn(ply) end
 function GM:PlayerDeath(victim,inflictor,attacker) end
 function GM:DoPlayerDeath() end
 function GM:GetFallDamage( ply, speed ) return 0 end
 
 function CHESTBURSTER.CollectGold(ply,gold)
+	if CHESTBURSTER.RoundState == 3 then return end
+	if ply:GetNWBool("KnockedOut") == true then return end
 	ply:EmitSound("ambient/levels/labs/coinslot1.wav")
 	ply:SetNWInt("Gold",ply:GetNWInt("Gold")+gold)
+	CHESTBURSTER_Message(ply, "Gold", "+"..gold, Vector(255,215,155), false)
 	if ply:GetNWInt("Gold") >= CHESTBURSTER.MaxGold then
 		CHESTBURSTER.RoundEnd()
 	end
 end
 
 function CHESTBURSTER.DropGold(ply,gold)
+	if CHESTBURSTER.RoundState == 3 then return end
 	if ply:GetNWInt("Gold")-gold <= 50 then return end
-	ply:PrintMessage(HUD_PRINTTALK,"You dropped "..gold.." gold!")
+	CHESTBURSTER_Message(ply, "Gold", "-"..gold, Vector(255,115,115), false)
 	ply:SetNWInt("Gold",ply:GetNWInt("Gold")-gold)
 	for i=1,5 do
 		local golddrop = ents.Create("chbu_gold")
@@ -82,6 +93,8 @@ function CHESTBURSTER.DropGold(ply,gold)
 end
 
 function CHESTBURSTER.ImbueWeapon(ply,element)
+	if CHESTBURSTER.RoundState == 3 then return end
+	if ply:GetNWBool("KnockedOut") == true then return end
 	local wep = ply:GetActiveWeapon()
 	if !IsValid(wep) then return end
 	if wep:GetClass() != CHESTBURSTER.FistWeapon then
@@ -92,6 +105,12 @@ function CHESTBURSTER.ImbueWeapon(ply,element)
 end
 
 function CHESTBURSTER.GiveWeapon(ply,a)
+	local function matchtotable(b)
+		local wep = nil
+		for c, d in pairs(CHESTBURSTER.Weapons) do if b == d.wep then return c end end
+	end
+	if !isnumber(a) then a = matchtotable(a) end
+	if ply:GetNWBool("KnockedOut") == true then return end
 	if ply.AssignedWeapon == nil then
 		ply:StripWeapons()
 		ply.AssignedWeapon = CHESTBURSTER.Weapons[a].wep
@@ -102,28 +121,40 @@ function CHESTBURSTER.GiveWeapon(ply,a)
 end
 
 function CHESTBURSTER.DropWeapon(ply)
+	if ply:GetNWBool("KnockedOut") == true then return end
+	local wep = ply:GetActiveWeapon()
 	if ply.AssignedWeapon == nil then return end
-	if !IsValid(ply:GetActiveWeapon()) then return end
-	ply:DropWeapon(ply:GetActiveWeapon())
-	ply.AssignedWeapon = nil
+	if !IsValid(wep) then return end
+	ply:DropWeapon(wep)
 	ply:StripWeapons()
-	ply:Give(CHESTBURSTER.FistWeapon)
+	ply.AssignedWeapon = nil
+	CHESTBURSTER_Message(ply, "Weapon", "Press Reload to pull out your fists!", Vector(255,255,155), false)
 	ply:EmitSound("weapons/physcannon/physcannon_drop.wav")
+	ply.NextPickup = CurTime()+1
 end
 
 function GM:PlayerCanPickupWeapon(ply,wep)
-	if ply:GetNWBool("KnockedOut") == true then return false end
-	if ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply:GetActiveWeapon():Remove() ply:SelectWeapon(wep:GetClass()) return true end
-	if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then return true end
-	if ply.AssignedWeapon == wep or ply.Assignedweapon == nil then return true end
+	if ply.NextPickup < CurTime() then
+		ply.NextPickup = CurTime()+2
+		if ply:GetNWBool("KnockedOut") == true then return false end -- cant when knocked out
+		if ply.AssignedWeapon == nil or ply:HasWeapon(CHESTBURSTER.FistWeapon) then -- all checks out
+			if wep:GetClass() != CHESTBURSTER.FistWeapon then
+				CHESTBURSTER.GiveWeapon(ply,wep:GetClass())
+			end
+			return true
+		end
+		if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then return true end -- got nothing so yeah
+	end
 	return false
 end
 
 function CHESTBURSTER.GivePowerup(ply,powerup)
+	if CHESTBURSTER.RoundState == 3 then return end
+	if ply:GetNWBool("KnockedOut") == true then return end
 	CHESTBURSTER.Powerups[powerup].onPickup(ply)
 
-	local fx = EffectData() fx:SetOrigin( ply:GetPos() + Vector(0,0,32) )
-	util.Effect( "fx_cb_powerup", fx )
+	local fx = EffectData() fx:SetOrigin(ply:GetPos()+Vector(0,0,32))
+	util.Effect("fx_cb_powerup",fx,true,true)
 	ply:EmitSound("npc/scanner/cbot_energyexplosion1.wav",100,85)
 	CHESTBURSTER_Message(ply, "Powerup", CHESTBURSTER.Powerups[powerup].name.." activated! "..CHESTBURSTER.Powerups[powerup].desc, Vector(155,255,155), false)
 
@@ -155,18 +186,6 @@ function CHESTBURSTER.ClearElementalStatus(ply)
 	end
 end
 
-function CHESTBURSTER.ApplyElementalDamage(element,target,attacker)
-	if target:GetNWBool("KnockedOut") == true then return end
-	if target:GetNWBool("KOImmunity") == true then return end
-	for a, b in pairs(CHESTBURSTER.Elements) do
-		if element == b.name then
-			b.onDamage(target,attacker)
-			local r = math.random(1,100)
-			if r <= b.buffChance then b.onBuff(target,attacker) end
-		end
-	end
-end
-
 function CHESTBURSTER.HandleElements(etype,element,target)
 	if etype == 1 then
 		local resist = false
@@ -188,6 +207,8 @@ function CHESTBURSTER.HandleElements(etype,element,target)
 end
 
 function CHESTBURSTER.ElementalDamage(element,target,attacker)
+	if target:GetNWBool("KnockedOut") == true then return end
+	if target:GetNWBool("KOImmunity") == true then return end
 	if target == attacker then return end
 	local r = math.random(1,100)
 	for a, b in pairs(CHESTBURSTER.Elements) do
@@ -203,14 +224,16 @@ function CHESTBURSTER.ElementalDamage(element,target,attacker)
 	end
 end
 
+local breakables = {"chbu_mimic","prop_physics","prop_physics_multiplayer","func_breakable","func_breakable_surf"}
 function GM:EntityTakeDamage(target,dmginfo)
 	local attacker = dmginfo:GetAttacker()
+	if !attacker:IsPlayer() then return end
 	if !target:IsPlayer() then return end
-	if !dmginfo:GetAttacker():IsPlayer() then return end
 	if attacker:GetActiveWeapon():GetClass() == CHESTBURSTER.FistWeapon then
 		CHESTBURSTER_PlayerDamage(CHESTBURSTER.FistDamage,"Physical",target,dmginfo:GetAttacker())
-		local diff = target:GetPos()-attacker:GetPos()
-		target:SetVelocity((diff*CHESTBURSTER.FistPower)+Vector(0,0,2*CHESTBURSTER.FistPower))
+		local diff = (target:GetPos()-attacker:GetPos())/2
+		target:SetPos(target:GetPos()+Vector(0,0,1))
+		target:SetVelocity((diff*CHESTBURSTER.FistPower)+Vector(0,0,215))
 	end
 	return true
 end
@@ -218,34 +241,33 @@ function GM:ScalePlayerDamage(ply,hitgroup,dmginfo) end
 
 function CHESTBURSTER_PlayerDamage(damage,element,target,attacker)
 	if CHESTBURSTER.RoundState == 3 then return end
-	if !target:IsPlayer() then return end if !attacker:IsPlayer() then return end
+	if !target:IsPlayer() then return end
 	if target:GetNWBool("KOImmunity") == true then return end
 	if element == nil then element = "Physical" end
+
 	target:EmitSound(table.Random(CHESTBURSTER.HurtSounds),100,100)
 
-	damage = damage + attacker:GetNWInt("DamageMultiplier")
+	if IsValid(attacker) then if attacker:IsPlayer() then damage = damage * attacker:GetNWInt("DamageMultiplier") end end 
 	damage = damage - target:GetNWInt("DamageResistance")
 
 	if CHESTBURSTER.HandleElements(1,element,target) == true then -- Handle elemental resistance
 		damage = math.Round(damage/1.5)
 	end
 	element = CHESTBURSTER.HandleElements(2,element,target) -- Handle elemental imbue damage
-	CHESTBURSTER.ElementalDamage(element,target,attacker)
+	if IsValid(attacker) then if attacker:IsPlayer() then CHESTBURSTER.ElementalDamage(element,target,attacker) end end 
 
 	target:ChangeKO(damage,"+")
 
 	if target:IsPlayer() && target:GetNWBool("KnockedOut") == false then
 		if target:GetNWInt("KO") >= target:GetNWInt("KOMax") then
-			if attacker == target then
-				CHESTBURSTER_Message(target, "Damage", attacker:Name().." was knocked out!", Vector(255,155,155), true)
+			if attacker == target or !attacker:IsPlayer() then 
+				CHESTBURSTER_Message(target, "Damage", target:Name().." was knocked out!", Vector(255,155,155), true) 
 			end
 			if attacker:IsPlayer() && attacker != target then 
 				attacker:SetNWInt("TotalKO",attacker:GetNWInt("TotalKO")+1)
-				attacker:AddFrags(1)
 				CHESTBURSTER_Message(target, "Damage", attacker:Name().." knocked out "..target:Name().."!", Vector(255,155,155), true)
 			end
 			target:SetNWInt("SelfKO",target:GetNWInt("SelfKO")+1)
-			target:AddDeaths(1)
 			target:KnockOut()
 		end
 	end
@@ -259,7 +281,7 @@ function player:KnockOut()
 	CHESTBURSTER.DropWeapon(self)
 
 	local fx = EffectData() fx:SetOrigin(self:GetPos())
-	util.Effect("fx_chbu_ko",fx)
+	util.Effect("fx_chbu_ko",fx,true,true)
 
 	self:EmitSound(table.Random(CHESTBURSTER.KOSounds),100,80)
 	self:ClearMovementEffects()
@@ -293,11 +315,20 @@ function player:Recover()
 	CHESTBURSTER_Message(self, "Damage", "Recovered from KO! Immune to KOs for "..CHESTBURSTER.KORecoveryTime.." seconds!", Vector(155,155,255), false)
 	self:EmitSound(table.Random(CHESTBURSTER.RecoverSounds),100,100)
 
+	-- Power Recovery: On PowerRecoveryMax you'll receive a free powerup.
+	self:SetNWInt("PowerRecovery",self:GetNWInt("PowerRecovery")+1)
+	if self:GetNWInt("PowerRecovery") >= CHESTBURSTER.PowerRecoveryMax then
+		self:SetNWInt("PowerRecovery",0)
+		local rp = math.random(1,#CHESTBURSTER.Powerups)
+		CHESTBURSTER.GivePowerup(self,rp)
+	end
+
 	local fx = EffectData() fx:SetOrigin(self:GetPos())
-	util.Effect("fx_chbu_recovery",fx)
+	util.Effect("fx_chbu_recovery",fx,true,true)
 
 	timer.Simple(CHESTBURSTER.KORecoveryTime,function()
 		if IsValid(self) then
+			if self:GetNWBool("KnockedOut") == true then return end
 			self:SetNWBool("KOImmunity",false)
 			CHESTBURSTER_Message(self, "Damage", "Recovery lost!", Vector(115,185,255), false)
 		end
@@ -306,7 +337,7 @@ end
 
 function player:Frostbite(time)
 	local fx = EffectData() fx:SetOrigin(self:GetPos())
-	util.Effect("fx_chbu_freeze",fx)
+	util.Effect("fx_chbu_freeze",fx,true,true)
 	self:Freeze(true)
 	timer.Create("chbu_frostbite"..self:EntIndex(),time,1,function()
 		if IsValid(self) then self:Freeze(false) end
@@ -318,7 +349,7 @@ end
 
 function player:Slow(time)
 	local fx = EffectData() fx:SetOrigin(self:GetPos())
-	util.Effect("fx_chbu_slowed",fx)
+	util.Effect("fx_chbu_slowed",fx,true,true)
 	self:SetWalkSpeed(self.BaseWalkSpeed/CHESTBURSTER.SlowRating) self:SetRunSpeed(self.BaseRunSpeed/CHESTBURSTER.SlowRating) self:SetCrouchedWalkSpeed(self.BaseCrouchSpeed/CHESTBURSTER.SlowRating)
 	timer.Create("chbu_slow"..self:EntIndex(),time,1,function()
 		self:ResetMovementSpeed()
@@ -330,7 +361,7 @@ end
 
 function player:Haste(time)
 	local fx = EffectData() fx:SetOrigin(self:GetPos())
-	util.Effect("fx_chbu_haste",fx)
+	util.Effect("fx_chbu_haste",fx,true,true)
 	self:SetWalkSpeed(self.BaseWalkSpeed*CHESTBURSTER.HasteRating) self:SetRunSpeed(self.BaseRunSpeed*CHESTBURSTER.HasteRating) self:SetCrouchedWalkSpeed(self.BaseCrouchSpeed*CHESTBURSTER.HasteRating)
 	timer.Create("chbu_haste"..self:EntIndex(),time,1,function()
 		self:ResetMovementSpeed()
@@ -358,7 +389,7 @@ end
 
 function player:Blind(time)
 	local fx = EffectData() fx:SetOrigin(self:GetPos())
-	util.Effect("fx_chbu_blinded",fx)
+	util.Effect("fx_chbu_blinded",fx,true,true)
 	net.Start("CHESTBURSTERBLIND") net.WriteInt(time,8) net.Send(self)
 end
 
@@ -402,8 +433,18 @@ function CHESTBURSTER.DoTesla(pos)
 end
 
 function CHESTBURSTER.KeyPress(ply,key)
-	if key == IN_SCORE then ply:Taunt() end
-	if key == IN_RELOAD then CHESTBURSTER.DropWeapon(ply) end
-	if key == IN_USE then ply:Climb() end
+	if ply:GetNWBool("KnockedOut") == false then 
+		if key == IN_SCORE then ply:Taunt() end
+		if key == IN_RELOAD then 
+			--if ply.AssignedWeapon != nil then if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply.AssignedWeapon = nil end end
+			if ply.AssignedWeapon == nil then
+				ply:Give(CHESTBURSTER.FistWeapon)
+				if ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply:SelectWeapon(CHESTBURSTER.FistWeapon) end
+				return
+			end 
+			CHESTBURSTER.DropWeapon(ply)
+		end
+		if key == IN_USE then ply:Climb() end
+	end
 end
 hook.Add("KeyPress","CHBUKeyPress",CHESTBURSTER.KeyPress)

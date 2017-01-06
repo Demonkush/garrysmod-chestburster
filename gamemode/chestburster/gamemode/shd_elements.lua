@@ -4,7 +4,7 @@ Elements
 CHESTBURSTER.Elements = {}
 CHESTBURSTER.Elements[1] = {
 	name = "Fire",status = "Burning",
-	buffChance = 35,
+	buffChance = 65,
 	color = Color(255,175,155,255),
 	time = 4,
 	onBuff = function(target,attacker)
@@ -19,7 +19,11 @@ CHESTBURSTER.Elements[1] = {
 
 				CHESTBURSTER_PlayerDamage(math.random(13,15)-damp,"Fire",target,attacker)
 				local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-				util.Effect( "fx_cb_firepuff", fx )
+				util.Effect( "fx_chbu_firepuff", fx ,true,true)
+
+				net.Start("CHESTBURSTERSENDSTATUS")
+					net.WriteString("Burning")	net.WriteInt(4,32)
+				net.Send(ply)
 			else target:SetNWBool("StatusFire",false) timer.Remove("CB_StatusFire"..target) end
 		end)
 	end,
@@ -31,12 +35,12 @@ CHESTBURSTER.Elements[1] = {
 
 			CHESTBURSTER_PlayerDamage(math.random(10,12)-damp,"Fire",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-			util.Effect( "fx_cb_firepuff", fx )
+			util.Effect( "fx_chbu_firepuff", fx ,true,true)
 		end
 	end,
 	ImbueWeapon = function(ply,wep)
 		if IsValid(wep) then
-			wep:SetElement("Fire") wep.ImpactEffect = "fx_chbu_firepuff"
+			wep:SetElement("Fire") wep:SetImpactEffect("fx_chbu_firepuff")
 			net.Start("CHESTBURSTERWEAPONINFO") net.WriteString("Flaming") net.Send(ply)
 		end
 	end,
@@ -65,7 +69,11 @@ CHESTBURSTER.Elements[2] = {
 
 				CHESTBURSTER_PlayerDamage(math.random(4,5),"Frost",target,attacker)
 				local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-				util.Effect( "fx_cb_frostpuff", fx )
+				util.Effect( "fx_chbu_frostpuff", fx ,true,true)
+
+				net.Start("CHESTBURSTERSENDSTATUS")
+					net.WriteString("Freezing")	net.WriteInt(8,32)
+				net.Send(ply)
 			else target:SetNWBool("StatusFrost",false) timer.Remove("CB_StatusFrost"..target) end
 		end)
 	end,
@@ -76,12 +84,12 @@ CHESTBURSTER.Elements[2] = {
 			end
 			CHESTBURSTER_PlayerDamage(math.random(2,3),"Frost",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-			util.Effect( "fx_cb_frostpuff", fx )
+			util.Effect( "fx_chbu_frostpuff", fx ,true,true)
 		end
 	end,
 	ImbueWeapon = function(ply,wep)
 		if IsValid(wep) then
-			wep:SetElement("Frost") wep.ImpactEffect = "fx_chbu_frostpuff"
+			wep:SetElement("Frost") wep:SetImpactEffect("fx_chbu_frostpuff")
 			net.Start("CHESTBURSTERWEAPONINFO") net.WriteString("Freezing") net.Send(ply)
 		end
 	end,
@@ -105,8 +113,12 @@ CHESTBURSTER.Elements[3] = {
 				target:EmitSound("ambient/voices/cough"..math.random(1,4)..".wav")
 
 				CHESTBURSTER_PlayerDamage(math.random(6,9),"Poison",target,attacker)
-				local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-				util.Effect( "fx_cb_poisonpuff", fx )
+				local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) ) fx:SetScale(1)
+				util.Effect( "fx_chbu_poisonpuff", fx ,true,true)
+
+				net.Start("CHESTBURSTERSENDSTATUS")
+					net.WriteString("Burning")	net.WriteInt(12,32)
+				net.Send(ply)
 			else target:SetNWBool("StatusPoison",false) timer.Remove("CB_StatusPoison"..target) end
 		end)
 	end,
@@ -114,12 +126,12 @@ CHESTBURSTER.Elements[3] = {
 		if IsValid(target) && target:Alive() then
 			CHESTBURSTER_PlayerDamage(math.random(4,7),"Poison",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-			util.Effect( "fx_cb_poisonpuff", fx )
+			util.Effect( "fx_chbu_poisonpuff", fx ,true,true)
 		end
 	end,
 	ImbueWeapon = function(ply,wep)
 		if IsValid(wep) then
-			wep:SetElement("Poison") wep.ImpactEffect = "fx_chbu_poisonpuff"
+			wep:SetElement("Poison") wep:SetImpactEffect("fx_chbu_poisonpuff")
 			net.Start("CHESTBURSTERWEAPONINFO") net.WriteString("Venom") net.Send(ply)
 		end
 	end,
@@ -132,7 +144,7 @@ CHESTBURSTER.Elements[3] = {
 }
 CHESTBURSTER.Elements[4] = {
 	name = "Storm",status = "Electrified",
-	buffChance = 50,
+	buffChance = 65,
 	color = Color(125,215,255,255),
 	time = 6,
 	onBuff = function(target,attacker)
@@ -146,7 +158,11 @@ CHESTBURSTER.Elements[4] = {
 
 				CHESTBURSTER_PlayerDamage(math.random(7,11)*add,"Storm",target,attacker)
 				local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-				util.Effect( "fx_cb_stormpuff", fx )
+				util.Effect( "fx_chbu_stormpuff", fx ,true,true)
+
+				net.Start("CHESTBURSTERSENDSTATUS")
+					net.WriteString("Burning")	net.WriteInt(6,32)
+				net.Send(ply)
 			else target:SetNWBool("StatusStorm",false) timer.Remove("CB_StatusStorm"..target) end
 		end)
 	end,
@@ -156,12 +172,12 @@ CHESTBURSTER.Elements[4] = {
 			local add = 1 if target:GetNWBool("StatusWater") == true then add = 2 end
 			CHESTBURSTER_PlayerDamage(math.random(5,8)*add,"Storm",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-			util.Effect( "fx_cb_stormpuff", fx )
+			util.Effect( "fx_chbu_stormpuff", fx ,true,true)
 		end
 	end,
 	ImbueWeapon = function(ply,wep)
 		if IsValid(wep) then
-			wep:SetElement("Storm") wep.ImpactEffect = "fx_chbu_stormpuff"
+			wep:SetElement("Storm") wep:SetImpactEffect("fx_chbu_stormpuff")
 			net.Start("CHESTBURSTERWEAPONINFO") net.WriteString("Lightning") net.Send(ply)
 		end
 	end,
@@ -174,7 +190,7 @@ CHESTBURSTER.Elements[4] = {
 }
 CHESTBURSTER.Elements[5] = {
 	name = "Water",status = "Soaked",
-	buffChance = 50,
+	buffChance = 85,
 	color = Color(155,155,255,255),
 	time = 10,
 	onBuff = function(target,attacker)
@@ -186,7 +202,11 @@ CHESTBURSTER.Elements[5] = {
 
 				CHESTBURSTER_PlayerDamage(math.random(4,5),"Water",target,attacker)
 				local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-				util.Effect( "fx_cb_waterpuff", fx )
+				util.Effect( "fx_chbu_waterpuff", fx ,true,true)
+
+				net.Start("CHESTBURSTERSENDSTATUS")
+					net.WriteString("Burning")	net.WriteInt(10,32)
+				net.Send(ply)
 			else target:SetNWBool("StatusWater",false) timer.Remove("CB_StatusWater"..target) end
 		end)
 	end,
@@ -194,12 +214,12 @@ CHESTBURSTER.Elements[5] = {
 		if IsValid(target) && target:Alive() then
 			CHESTBURSTER_PlayerDamage(math.random(3,4),"Water",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
-			util.Effect( "fx_cb_waterpuff", fx )
+			util.Effect( "fx_chbu_waterpuff", fx ,true,true)
 		end
 	end,
 	ImbueWeapon = function(ply,wep)
 		if IsValid(wep) then
-			wep:SetElement("Water") wep.ImpactEffect = "fx_chbu_waterpuff"
+			wep:SetElement("Water") wep:SetImpactEffect("fx_chbu_waterpuff")
 			net.Start("CHESTBURSTERWEAPONINFO") net.WriteString("Soaking") net.Send(ply)
 		end
 	end,

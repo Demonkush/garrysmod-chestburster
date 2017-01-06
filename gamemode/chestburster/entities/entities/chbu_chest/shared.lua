@@ -8,8 +8,17 @@ end
 
 if CLIENT then
 	function ENT:Initialize()
+		self.spawnfxtype = 1
 		self.Emit = ParticleEmitter(self:GetPos())
 		self.NextEmit = RealTime() 
+
+		if self.spawnfxtype == 1 then
+			self.Entity:SetModelScale(0.1)
+			self.scale=0 self.maxscale = 1
+		elseif self.spawnfxtype == 2 then
+			self.Entity:SetColor(Color(255,255,255,0))
+			self.col=0 self.maxcol = 255
+		end
 	end
 
 	function ENT:Draw()
@@ -59,6 +68,17 @@ if CLIENT then
 	        lite.DieTime 	= CurTime()+0.1
 		end
 		self.Emit:SetPos(self:GetPos())
+		if self.spawnfxtype == 1 then
+			if self.scale < self.maxscale then
+				self.scale = self.scale + 0.01
+				self.Entity:SetModelScale(self.scale)
+			end
+		elseif self.spawnfxtype == 2 then
+			if self.col < self.maxcol then
+				self.col = self.col + 0.01 
+				self.Entity:SetColor(Color(255,255,255,self.col))
+			end
+		end
 		return true
 	end
 

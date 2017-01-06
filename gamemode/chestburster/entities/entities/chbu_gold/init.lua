@@ -19,22 +19,27 @@ function ENT:Initialize()
 	end
 
 	self.GoldAmount = 50
+	self.Received = false
 end
 
 function ENT:Touch(ent)
-	if ent:IsPlayer() then
-		CHESTBURSTER.CollectGold(ent,self.GoldAmount)
-		ent:PrintMessage(HUD_PRINTTALK,"Picked up "..self.GoldAmount.." gold!")
-		self:Remove()
+	if SERVER then
+		if ent:IsPlayer() then
+			if self.Received == true then return end self.Received = true
+			CHESTBURSTER.CollectGold(ent,self.GoldAmount)
+			self:Remove()
+		end
 	end
 end
 
 function ENT:Use(activator)
-	CHESTBURSTER.CollectGold(activator,self.GoldAmount)
-	activator:PrintMessage(HUD_PRINTTALK,"Picked up "..self.GoldAmount.." gold!")
-	self:Remove()
+	if SERVER then
+		if self.Received == true then return end self.Received = true
+		CHESTBURSTER.CollectGold(activator,self.GoldAmount)
+		self:Remove()
+	end
 end
 
 function ENT:OnRemove()
-	local fx = EffectData() fx:SetOrigin(self:GetPos()) util.Effect("fx_chbu_goldpuff",fx)
+	local fx = EffectData() fx:SetOrigin(self:GetPos()) util.Effect("fx_chbu_goldpuff",fx,true,true)
 end

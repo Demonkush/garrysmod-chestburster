@@ -1,0 +1,56 @@
+( Major Release -> Minor Release -> Letter Version ( fixes / etc ) )
+1.1b - Competition Submission Release ( Jan / 4th / 2017 )
+- Initial release.
+
+1.2a - ( Jan / 5th / 2017 )
+*** General
+- Round info is sent to newly joined players.
+- Map config will now try to reload every new round.
+- Round Time increased from 240 to 300 seconds.
+- Improved handling of end round scoreboard.
+
+*** Chests
+- New spawn effect.
+- Trap rate decreased from 55 to 45.
+- Powerup rate decreased from 77 to 66.
+
+*** Powerups
+- Enhanced Damage now properly multiplies damage.
+- KO Armor damage resistance increased from 5 to 10.
+- Extra KO duration increased from 25 to 45 seconds.
+- Detection duration increased from 25 to 35 seconds.
+- Haste speed multiplier decreased from 2 to 1.5.
+
+*** Players
+- Power Recovery - At an increment of 5 recoveries, you'll receive a free powerup.
+- Dying should be impossible now.
+- Players now stand still ( frozen ) while collecting from chests.
+- Can no longer collect gold if knocked out.
+- If a player dies, they wont reset score on respawn, only on a new round. ( deaths should not happen tho )
+- Improved handling elements on damage.
+
+*** Traps
+- Poison Gas radius increased from 155 to 225
+- Swarm attack rate and lifetime decreased.
+- Blindness duration increased from 3 to 6 seconds.
+- Mimics can now be killed and also drop a small amount of gold!
+
+*** Weapons
+- Weapon dropping and pickup is now functional!
+- Sorcerer Cannon explosion radius decreased from 255 to 215
+- Sticky Grenades explosion radius decreased from 255 to 235
+- Wandbar explosion radius decreased from 175 to 135
+- Sticky Grenade loses solidity on collision. ( prevents weird collisions )
+- All fist issues seem to be fixed.
+- Fist damage increased from 15 to 25.
+- Fist power reduced from 100 to 35.
+- Fist knockback direction changed, and has extra power against props.
+- Magic Pistol should now emit proper particle effects based on element.
+
+*** UI
+- Improved colors for KO Meter.
+- Better gold drop/pickup messages.
+
+*** Utility
+- Press Reload when holding nothing to bring back fists.
+- Added a concommand for superadmins: chbu_restartgame ( restarts the entire game )

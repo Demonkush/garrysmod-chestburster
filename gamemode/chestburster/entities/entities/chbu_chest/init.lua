@@ -58,10 +58,11 @@ function ENT:Use(ply)
 	if self.Opened == true then return end
 	self.Opened = true
 	CHESTBURSTER_Message(ply, "Chest", "Opening...", Vector(255,215,185), false)
-	timer.Simple(1,function() CHESTBURSTER.OpenChest(ply,self) end)
+	ply:Freeze(true)
+	timer.Simple(1,function() if IsValid(ply) then ply:Freeze(false) end CHESTBURSTER.OpenChest(ply,self) end)
 end
 
 function ENT:OnRemove()
 	local fx = EffectData() fx:SetOrigin(self:GetPos())
-	util.Effect("fx_chbu_poof",fx)
+	util.Effect("fx_chbu_poof",fx,true,true)
 end
