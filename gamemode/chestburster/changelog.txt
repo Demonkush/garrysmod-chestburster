@@ -2,6 +2,11 @@
 1.1b - Competition Submission Release ( Jan / 4th / 2017 )
 - Initial release.
 
+1.2b - ( Jan / 6th / 2017 )
+*** Fixes
+- Elemental statuses should display under the negative buffs area now.
+
+
 1.2a - ( Jan / 5th / 2017 )
 *** General
 - Round info is sent to newly joined players.
