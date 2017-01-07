@@ -23,7 +23,7 @@ CHESTBURSTER.Elements[1] = {
 
 				net.Start("CHESTBURSTERSENDSTATUS")
 					net.WriteString("Burning")	net.WriteInt(4,32)
-				net.Send(ply)
+				net.Send(target)
 			else target:SetNWBool("StatusFire",false) timer.Remove("CB_StatusFire"..target) end
 		end)
 	end,
@@ -73,7 +73,7 @@ CHESTBURSTER.Elements[2] = {
 
 				net.Start("CHESTBURSTERSENDSTATUS")
 					net.WriteString("Freezing")	net.WriteInt(8,32)
-				net.Send(ply)
+				net.Send(target)
 			else target:SetNWBool("StatusFrost",false) timer.Remove("CB_StatusFrost"..target) end
 		end)
 	end,
@@ -118,7 +118,7 @@ CHESTBURSTER.Elements[3] = {
 
 				net.Start("CHESTBURSTERSENDSTATUS")
 					net.WriteString("Burning")	net.WriteInt(12,32)
-				net.Send(ply)
+				net.Send(target)
 			else target:SetNWBool("StatusPoison",false) timer.Remove("CB_StatusPoison"..target) end
 		end)
 	end,
@@ -162,7 +162,7 @@ CHESTBURSTER.Elements[4] = {
 
 				net.Start("CHESTBURSTERSENDSTATUS")
 					net.WriteString("Burning")	net.WriteInt(6,32)
-				net.Send(ply)
+				net.Send(target)
 			else target:SetNWBool("StatusStorm",false) timer.Remove("CB_StatusStorm"..target) end
 		end)
 	end,
@@ -206,7 +206,7 @@ CHESTBURSTER.Elements[5] = {
 
 				net.Start("CHESTBURSTERSENDSTATUS")
 					net.WriteString("Burning")	net.WriteInt(10,32)
-				net.Send(ply)
+				net.Send(target)
 			else target:SetNWBool("StatusWater",false) timer.Remove("CB_StatusWater"..target) end
 		end)
 	end,

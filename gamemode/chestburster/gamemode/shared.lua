@@ -3,7 +3,7 @@ GM.Author = "Demonkush"
 GM.Website = "http://www.xmpstudios.com"
 
 CHESTBURSTER = {}
-CHESTBURSTER.Version = "1.2a"
+CHESTBURSTER.Version = "1.2b"
 CHESTBURSTER.ChestSpawnTable = {}
 
 include("shd_elements.lua")
