@@ -4,6 +4,10 @@ Gamemode for Garry's Mod, a submission for the 2016 Facepunch Gamemode Competiti
 
 Competition Page: https://facepunch.com/showthread.php?t=1537519
 
+Facepunch Thread: https://facepunch.com/showthread.php?t=1547734
+
+Steam Workshop Page: http://steamcommunity.com/sharedfiles/filedetails/?id=835683901
+
 
 # What is Chestburster?
 
