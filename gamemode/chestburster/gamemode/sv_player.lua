@@ -121,7 +121,6 @@ function CHESTBURSTER.GiveWeapon(ply,a)
 end
 
 function CHESTBURSTER.DropWeapon(ply)
-	if ply:GetNWBool("KnockedOut") == true then return end
 	local wep = ply:GetActiveWeapon()
 	if ply.AssignedWeapon == nil then return end
 	if !IsValid(wep) then return end
@@ -134,6 +133,7 @@ function CHESTBURSTER.DropWeapon(ply)
 end
 
 function GM:PlayerCanPickupWeapon(ply,wep)
+	if IsValid(ply:GetActiveWeapon()) && ply:GetActiveWeapon():GetClass() != CHESTBURSTER.FistWeapon then return end
 	if ply.NextPickup < CurTime() then
 		ply.NextPickup = CurTime()+2
 		if ply:GetNWBool("KnockedOut") == true then return false end -- cant when knocked out
@@ -182,7 +182,8 @@ end
 
 function CHESTBURSTER.ClearElementalStatus(ply)
 	for a, b in pairs(CHESTBURSTER.Elements) do
-		b.ClearStatus()
+		b.ClearStatus(ply)
+		net.Start("CHESTBURSTERSENDSTATUS") net.WriteBool(true) net.Send(ply)
 	end
 end
 
@@ -216,6 +217,7 @@ function CHESTBURSTER.ElementalDamage(element,target,attacker)
 			if r >= b.buffChance then
 				b.onBuff(target,attacker)
 				net.Start("CHESTBURSTERSENDSTATUS")
+					net.WriteBool(false)
 					net.WriteString(b.status)
 					net.WriteInt(b.time,32)
 				net.Send(target)
@@ -253,7 +255,9 @@ function CHESTBURSTER_PlayerDamage(damage,element,target,attacker)
 	if CHESTBURSTER.HandleElements(1,element,target) == true then -- Handle elemental resistance
 		damage = math.Round(damage/1.5)
 	end
-	element = CHESTBURSTER.HandleElements(2,element,target) -- Handle elemental imbue damage
+	if attacker:IsPlayer() && element == nil then
+		element = CHESTBURSTER.HandleElements(2,element,attacker) -- Handle elemental imbue damage
+	end
 	if IsValid(attacker) then if attacker:IsPlayer() then CHESTBURSTER.ElementalDamage(element,target,attacker) end end 
 
 	target:ChangeKO(damage,"+")
@@ -340,10 +344,10 @@ function player:Frostbite(time)
 	util.Effect("fx_chbu_freeze",fx,true,true)
 	self:Freeze(true)
 	timer.Create("chbu_frostbite"..self:EntIndex(),time,1,function()
-		if IsValid(self) then self:Freeze(false) end
+		if IsValid(self) then if self:GetNWBool("KnockedOut") == false then self:Freeze(false) end end
 	end)
 	net.Start("CHESTBURSTERSENDSTATUS")
-		net.WriteString("Frostbite") net.WriteInt(time,32)
+		net.WriteBool(false) net.WriteString("Frostbite") net.WriteInt(time,32)
 	net.Send(self)
 end
 
@@ -355,7 +359,7 @@ function player:Slow(time)
 		self:ResetMovementSpeed()
 	end)
 	net.Start("CHESTBURSTERSENDSTATUS")
-		net.WriteString("Slowed") net.WriteInt(time,32)
+		net.WriteBool(false) net.WriteString("Slowed") net.WriteInt(time,32)
 	net.Send(self)
 end
 
@@ -437,6 +441,8 @@ function CHESTBURSTER.KeyPress(ply,key)
 		if key == IN_SCORE then ply:Taunt() end
 		if key == IN_RELOAD then 
 			--if ply.AssignedWeapon != nil then if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply.AssignedWeapon = nil end end
+			if !IsValid(ply:GetActiveWeapon()) then ply.AssignedWeapon = nil ply:SelectWeapon(CHESTBURSTER.FistWeapon) end
+			if IsValid(ply:GetActiveWeapon()) && ply:GetActiveWeapon():GetClass() == CHESTBURSTER.FistWeapon then ply:StripWeapon(CHESTBURSTER.FistWeapon) return end
 			if ply.AssignedWeapon == nil then
 				ply:Give(CHESTBURSTER.FistWeapon)
 				if ply:HasWeapon(CHESTBURSTER.FistWeapon) then ply:SelectWeapon(CHESTBURSTER.FistWeapon) end

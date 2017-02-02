@@ -17,8 +17,8 @@ SWEP.ViewModel          = "models/weapons/v_pistol.mdl"
 SWEP.WorldModel         = "models/weapons/w_pistol.mdl"
 
 SWEP.Primary.Sound 			= Sound("weapons/pistol/pistol_fire2.wav")
-SWEP.Primary.Damage 		= 10
-SWEP.Primary.Delay 			= 0.3
+SWEP.Primary.Damage 		= 8
+SWEP.Primary.Delay 			= 0.35
 SWEP.Primary.ClipSize		= -1
 SWEP.Primary.DefaultClip	= -1
 SWEP.Primary.Automatic 		= true

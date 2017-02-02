@@ -3,7 +3,7 @@ GM.Author = "Demonkush"
 GM.Website = "http://www.xmpstudios.com"
 
 CHESTBURSTER = {}
-CHESTBURSTER.Version = "1.2b"
+CHESTBURSTER.Version = "1.2c"
 CHESTBURSTER.ChestSpawnTable = {}
 
 include("shd_elements.lua")
@@ -13,18 +13,19 @@ include("shd_sounds.lua")
 include("shd_weapons.lua")
 
 CHESTBURSTER.ChestModels = {}
-CHESTBURSTER.ChestModels[1] = {model="models/hunter/blocks/cube05x1x05.mdl",offset=Vector(0,0,12)}
-CHESTBURSTER.ChestModels[2] = {model="models/props_junk/wood_crate002a.mdl",offset=Vector(0,0,20)}
-CHESTBURSTER.ChestModels[3] = {model="models/Items/ammocrate_smg1.mdl",offset=Vector(0,0,15)}
-CHESTBURSTER.ChestModels[4] = {model="models/props_c17/FurnitureDrawer001a.mdl",offset=Vector(0,0,20)}
-CHESTBURSTER.ChestModels[5] = {model="models/props_lab/filecabinet02.mdl",offset=Vector(0,0,15)}
+function CHESTBURSTER.AddChestModel(a,b) table.insert(CHESTBURSTER.ChestModels,{model=a,offset=b}) end
+CHESTBURSTER.AddChestModel("models/hunter/blocks/cube05x1x05.mdl",Vector(0,0,12))
+CHESTBURSTER.AddChestModel("models/props_junk/wood_crate002a.mdl",Vector(0,0,12))
+CHESTBURSTER.AddChestModel("models/Items/ammocrate_smg1.mdl",Vector(0,0,12))
+CHESTBURSTER.AddChestModel("models/props_c17/FurnitureDrawer001a.mdl",Vector(0,0,12))
+CHESTBURSTER.AddChestModel("models/props_lab/filecabinet02.mdl",Vector(0,0,12))
 
-CHESTBURSTER.Playermodels = {
-	"models/player/kleiner.mdl",
-	"models/player/gman_high.mdl",
-	"models/player/alyx.mdl",
-	"models/player/eli.mdl"
-}
+CHESTBURSTER.Playermodels = {}
+function CHESTBURSTER.AddPlayerModel(a) table.insert(CHESTBURSTER.Playermodels,a) end
+CHESTBURSTER.AddPlayerModel("models/player/kleiner.mdl")
+CHESTBURSTER.AddPlayerModel("models/player/gman_high.mdl")
+CHESTBURSTER.AddPlayerModel("models/player/alyx.mdl")
+CHESTBURSTER.AddPlayerModel("models/player/eli.mdl")
 
 -- Hard Variables ( do not change )
 CHESTBURSTER.RoundTimer = 0
@@ -40,6 +41,11 @@ CHESTBURSTER.GoldDropFraction = 4 -- Fraction of gold dropped on KO.
 CHESTBURSTER.RoundTime 		= 300 	-- Duration of a round.
 CHESTBURSTER.MapVoteDelay 	= 10 	-- Delay between end of last round and map vote starting.
 CHESTBURSTER.MaxRounds 		= 3 	-- Total number of rounds before map change.
+
+CHESTBURSTER.DisableDefaultWeapons 	= false -- If you are using a custom weapon set, you can disable the default set.
+CHESTBURSTER.DisableDefaultTraps 	= false -- [NOT RECOMMENDED] If you are using a custom pack and want to disable the default set.
+CHESTBURSTER.DisableDefaultPowerups = false -- ^
+CHESTBURSTER.DisableDefaultElements = false -- ^
 
 CHESTBURSTER.FistWeapon 	= "weapon_chbu_fists"	-- Weapon to use for default fist weapon.
 CHESTBURSTER.FistDamage 	= 25 		-- Amount of damage dealt with fists.
@@ -71,4 +77,6 @@ CHESTBURSTER.KORegenDelay	= 2 	-- KO regeneration delay.
 -- "mapvote": Third party map vote system ( requires user config, see CHESTBURSTER.ChangeMap() )
 CHESTBURSTER.MapChangeMode = "nextmap"
 
-concommand.Remove("kill")
+function CHESTBURSTER.AddWeapon(name,wep)
+	table.insert(CHESTBURSTER.Weapons,{name,wep})
+end

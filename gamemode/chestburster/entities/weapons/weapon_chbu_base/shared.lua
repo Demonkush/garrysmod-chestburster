@@ -41,7 +41,7 @@ SWEP.ProjectileGravity = true
 
 function SWEP:SetupDataTables()
 	self:NetworkVar("String",0,"Element")
-	self:NetworkVar("String",0,"ImpactEffect")
+	self:NetworkVar("String",1,"ImpactEffect")
 end
 
 function SWEP:Initialize()
@@ -76,11 +76,16 @@ function SWEP:CHBU_BulletAttack()
 	bullet.Tracer	= 1
 	bullet.TracerName = "Tracer"
 	bullet.Force	= self.Primary.Damage*5
-	bullet.Damage	= damage
+	bullet.Damage	= self.Primary.Damage
 	bullet.Callback = function(att,tr,dmginfo)
 		if SERVER then
-			for k, v in pairs(ents.FindInSphere(tr.HitPos,100)) do
-				CHESTBURSTER_PlayerDamage(self.Primary.Damage,self:GetElement(),tr.Entity,self.Owner)
+			for k, v in pairs(ents.FindInSphere(tr.HitPos,85)) do
+				if v != self.Owner then
+					CHESTBURSTER_PlayerDamage(self.Primary.Damage,self:GetElement(),v,self.Owner)
+					if !v:IsPlayer() then
+						v:TakeDamage(self.Primary.Damage)
+					end
+				end
 			end
 			if self:GetElement() == "Storm" then
 				CHESTBURSTER.DoTesla(tr.HitPos)
@@ -114,7 +119,7 @@ function SWEP:CHBU_ProjectileAttack()
 
 		proj:SetElement(self:GetElement())
 		proj.Damage = self.Primary.Damage
-		proj.ImpactEffect = self:GetImpactEffect()
+		proj:SetImpactEffect(self:GetImpactEffect())
 
 		proj:SetElementColor()
 

@@ -1,14 +1,5 @@
 function EFFECT:Init(data)
 	local emit = ParticleEmitter(data:GetOrigin())
-	for i=0, 1 do
-		local part = emit:Add("sprites/glow04_noz",data:GetOrigin())
-		part:SetVelocity(Vector(0,0,0))
-		part:SetStartAlpha(255)
-		part:SetStartSize(45)
-		part:SetEndSize(0)
-		part:SetDieTime(2)
-		part:SetColor(math.random(215,255),55,55) 
-	end
 	for i=0, 15 do
 		local part = emit:Add("sprites/glow04_noz",data:GetOrigin()+Vector(0,0,math.random(-32,32)))
 		part:SetVelocity(VectorRand()*Vector(math.random(-155,155),math.random(-155,155),115))
@@ -18,7 +9,7 @@ function EFFECT:Init(data)
 		part:SetEndSize(0)
 		part:SetDieTime(math.random(1,1.5))
 		part:SetColor(math.random(215,255),55,55) 
-		part:SetGravity(Vector(0,0,256))
+		part:SetGravity(Vector(0,0,512))
 	end
 	emit:Finish()
 end

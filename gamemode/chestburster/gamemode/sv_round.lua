@@ -138,14 +138,13 @@ end
 function CHESTBURSTER.ChangeMap()
 	timer.Simple(CHESTBURSTER.MapVoteDelay,function()
 		if CHESTBURSTER.MapChangeMode == "nextmap" then RunConsoleCommand("changelevel",game.GetMapNext())
-
 		elseif CHESTBURSTER.MapChangeMode == "mapvote" then	
 			-- Third Party Mapvote system commands go here, will differ depending on the addon
 			-- Example: RunConsoleCommand("mapvote_force_vote") -- KmapVote
 		end
 
 		-- Failsafe ( if previous conditions were not met for some reason )
-		timer.Simple(60,function()
+		timer.Simple(120,function()
 			RunConsoleCommand("changelevel",game.GetMap())
 		end)
 	end)

@@ -18,3 +18,7 @@ CHESTBURSTER.Weapons[4] = {
 	name = "Sorcerer Cannon",
 	wep = "weapon_chbu_cannon"
 }
+
+function CHESTBURSTER.AddWeaponTable(tab)
+	table.Add(CHESTBURSTER.Weapons,tab)
+end

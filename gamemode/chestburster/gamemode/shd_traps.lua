@@ -43,6 +43,7 @@ CHESTBURSTER.Trap[3] = {
 		mimic:Spawn()
 		mimic:SetModel(chest:GetModel())
 		mimic:SetColor(Color(255,55,55,255))
+		mimic.HP = 75
 		chest:DoFX("fx_chbu_bloodpuff")
 		chest:Remove()
 		timer.Create("Mimic"..math.random(1,10000),1,15,function()
@@ -105,7 +106,7 @@ CHESTBURSTER.Trap[7] = {
 			swarm:SetModel("models/hunter/blocks/cube05x05x05.mdl")
 			swarm:SetColor(Color(255,55,55,255))
 			swarm.Damage = 7
-			swarm.HP = 10
+			swarm.HP = 35
 			chest:DoFX("fx_chbu_bloodpuff")
 			chest:Remove()
 			timer.Create("Swarm"..math.random(1,10000),1.5,10,function()
@@ -121,3 +122,7 @@ CHESTBURSTER.Trap[7] = {
 		end
 	end
 }
+
+function CHESTBURSTER.AddTrapTable(tab)
+	table.Add(CHESTBURSTER.Traps,tab)
+end

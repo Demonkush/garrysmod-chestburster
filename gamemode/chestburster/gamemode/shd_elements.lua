@@ -4,7 +4,7 @@ Elements
 CHESTBURSTER.Elements = {}
 CHESTBURSTER.Elements[1] = {
 	name = "Fire",status = "Burning",
-	buffChance = 65,
+	buffChance = 85,
 	color = Color(255,175,155,255),
 	time = 4,
 	onBuff = function(target,attacker)
@@ -22,9 +22,9 @@ CHESTBURSTER.Elements[1] = {
 				util.Effect( "fx_chbu_firepuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteString("Burning")	net.WriteInt(4,32)
+					net.WriteBool(false) net.WriteString("Burning")	net.WriteInt(4,32)
 				net.Send(target)
-			else target:SetNWBool("StatusFire",false) timer.Remove("CB_StatusFire"..target) end
+			else target:SetNWBool("StatusFire",false) timer.Remove("CB_StatusFire"..target:EntIndex()) end
 		end)
 	end,
 	onDamage = function(target,attacker)
@@ -53,7 +53,7 @@ CHESTBURSTER.Elements[1] = {
 }
 CHESTBURSTER.Elements[2] = {
 	name = "Frost",status = "Freezing",
-	buffChance = 65,
+	buffChance = 85,
 	color = Color(175,215,255,255),
 	time = 8,
 	onBuff = function(target,attacker)
@@ -72,9 +72,9 @@ CHESTBURSTER.Elements[2] = {
 				util.Effect( "fx_chbu_frostpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteString("Freezing")	net.WriteInt(8,32)
+					net.WriteBool(false) net.WriteString("Freezing")	net.WriteInt(8,32)
 				net.Send(target)
-			else target:SetNWBool("StatusFrost",false) timer.Remove("CB_StatusFrost"..target) end
+			else target:SetNWBool("StatusFrost",false) timer.Remove("CB_StatusFrost"..target:EntIndex()) end
 		end)
 	end,
 	onDamage = function(target,attacker)
@@ -102,7 +102,7 @@ CHESTBURSTER.Elements[2] = {
 }
 CHESTBURSTER.Elements[3] = {
 	name = "Poison",status = "Poisoned",
-	buffChance = 50,
+	buffChance = 65,
 	color = Color(185,255,155,255),
 	time = 12,
 	onBuff = function(target,attacker)
@@ -117,9 +117,9 @@ CHESTBURSTER.Elements[3] = {
 				util.Effect( "fx_chbu_poisonpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteString("Burning")	net.WriteInt(12,32)
+					net.WriteBool(false) net.WriteString("Poisoned")	net.WriteInt(12,32)
 				net.Send(target)
-			else target:SetNWBool("StatusPoison",false) timer.Remove("CB_StatusPoison"..target) end
+			else target:SetNWBool("StatusPoison",false) timer.Remove("CB_StatusPoison"..target:EntIndex()) end
 		end)
 	end,
 	onDamage = function(target,attacker)
@@ -144,7 +144,7 @@ CHESTBURSTER.Elements[3] = {
 }
 CHESTBURSTER.Elements[4] = {
 	name = "Storm",status = "Electrified",
-	buffChance = 65,
+	buffChance = 75,
 	color = Color(125,215,255,255),
 	time = 6,
 	onBuff = function(target,attacker)
@@ -152,7 +152,7 @@ CHESTBURSTER.Elements[4] = {
 		timer.Create("CB_StatusStorm"..target:EntIndex(),3,2,function()
 			if IsValid(target) && target:Alive() then
 				target:SetNWBool("StatusStorm",true)
-				local rvel = VectorRand()*150 target:SetVelocity(rvel+Vector(0,0,100))
+				local rvel = VectorRand()*255 target:SetVelocity(rvel+Vector(0,0,200))
 				target:EmitSound("ambient/machines/zap"..math.random(1,3)..".wav",100,100)
 				local add = 1 if target:GetNWBool("StatusWater") == true then add = 2 end
 
@@ -161,14 +161,14 @@ CHESTBURSTER.Elements[4] = {
 				util.Effect( "fx_chbu_stormpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteString("Burning")	net.WriteInt(6,32)
+					net.WriteBool(false) net.WriteString("Electrified")	net.WriteInt(6,32)
 				net.Send(target)
-			else target:SetNWBool("StatusStorm",false) timer.Remove("CB_StatusStorm"..target) end
+			else target:SetNWBool("StatusStorm",false) timer.Remove("CB_StatusStorm"..target:EntIndex()) end
 		end)
 	end,
 	onDamage = function(target,attacker)
 		if IsValid(target) && target:Alive() then
-			local rvel = VectorRand()*200 target:SetVelocity(rvel+Vector(0,0,150))
+			local rvel = VectorRand()*355 target:SetVelocity(rvel+Vector(0,0,200))
 			local add = 1 if target:GetNWBool("StatusWater") == true then add = 2 end
 			CHESTBURSTER_PlayerDamage(math.random(5,8)*add,"Storm",target,attacker)
 			local fx = EffectData() fx:SetOrigin( target:GetPos() + Vector(0,0,32) )
@@ -190,7 +190,7 @@ CHESTBURSTER.Elements[4] = {
 }
 CHESTBURSTER.Elements[5] = {
 	name = "Water",status = "Soaked",
-	buffChance = 85,
+	buffChance = 95,
 	color = Color(155,155,255,255),
 	time = 10,
 	onBuff = function(target,attacker)
@@ -205,9 +205,9 @@ CHESTBURSTER.Elements[5] = {
 				util.Effect( "fx_chbu_waterpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteString("Burning")	net.WriteInt(10,32)
+					net.WriteBool(false) net.WriteString("Soaking")	net.WriteInt(10,32)
 				net.Send(target)
-			else target:SetNWBool("StatusWater",false) timer.Remove("CB_StatusWater"..target) end
+			else target:SetNWBool("StatusWater",false) timer.Remove("CB_StatusWater"..target:EntIndex()) end
 		end)
 	end,
 	onDamage = function(target,attacker)
@@ -230,3 +230,7 @@ CHESTBURSTER.Elements[5] = {
 		end
 	end
 }
+
+function CHESTBURSTER.AddElementTable(tab)
+	table.Add(CHESTBURSTER.Elements,tab)
+end

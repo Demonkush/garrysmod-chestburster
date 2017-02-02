@@ -1,4 +1,5 @@
 AddCSLuaFile( "shared.lua" )
+AddCSLuaFile( "cl_init.lua" )
 include('shared.lua')
 
 function ENT:Initialize()
@@ -14,7 +15,7 @@ function ENT:Initialize()
 	end
 
 	self:SetElement("None")
-	self.ImpactEffect = "fx_chbu_normpuff"
+	self:SetImpactEffect("fx_chbu_normpuff")
 	self.Damage = 10
 end
 
@@ -27,7 +28,7 @@ end
 function ENT:Explode()
 	self:EmitSound("ambient/energy/zap"..math.random(1,9)..".wav",95,125)
 
-	for a, b in pairs(ents.FindInSphere(self:GetPos(),135)) do
+	for a, b in pairs(ents.FindInSphere(self:GetPos(),105)) do
 		if b != self:GetOwner() then
 			CHESTBURSTER_PlayerDamage(self.Damage,self:GetElement(),b,self:GetOwner())
 		end
@@ -39,7 +40,7 @@ function ENT:Explode()
 	end
 
 	local fx = EffectData() fx:SetOrigin( self:GetPos() ) fx:SetScale(1)
-	util.Effect( self.ImpactEffect, fx ,true,true)
+	util.Effect( self:GetImpactEffect(), fx ,true,true)
 
 	if self:GetElement() == "Storm" then
 		CHESTBURSTER.DoTesla(self:GetPos())

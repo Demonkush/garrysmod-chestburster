@@ -59,7 +59,7 @@ function CHESTBURSTER_DrawDebug()
 		end
 	end
 end
-net.Receive("CHESTBURSTERDEBUGUPDATE",function(len) CHESTBURSTER.ChestSpawnTable = net.ReadTable() end)
+net.Receive("CHESTBURSTERDEBUGUPDATE",function(len) CHESTBURSTER.ChestSpawnTable = net.ReadTable() CHESTBURSTER.Debug = net.ReadBool() end)
 
 function CHESTBURSTER_SetWeaponName(name)
 	local wep = LocalPlayer():GetActiveWeapon()
@@ -222,7 +222,8 @@ function CHESTBURSTER_DrawStatuses()
 	end
 end
 net.Receive("CHESTBURSTERSENDSTATUS",function(len)
-	local status,time = net.ReadString(),net.ReadInt(8)
+	local clear,status,time = net.ReadBool(),net.ReadString(),net.ReadInt(32)
+	if clear == true then local_status_table = {} end
 	if !table.HasValue(local_status_table,status) then table.insert(local_status_table,status) end
 	if !timer.Exists("CLTimerStatus"..status) then
 		timer.Create("CLTimerStatus"..status,time,1,function()

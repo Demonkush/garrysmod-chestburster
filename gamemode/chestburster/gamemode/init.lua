@@ -120,7 +120,7 @@ function CHESTBURSTER_Message(ply,ttype,msg,col,broadcast)
 end
 
 function CHESTBURSTER_UpdateDebug(ply)
-	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.Send(ply)
+	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.WriteBool(CHESTBURSTER.Debug) net.Send(ply)
 end
 
 --[[-------------------------------------------------------------------------

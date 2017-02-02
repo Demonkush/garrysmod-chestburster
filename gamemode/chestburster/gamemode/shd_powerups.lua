@@ -141,3 +141,7 @@ CHESTBURSTER.Powerups[11] = {
 	onExpire = function(ply)
 	end
 }
+
+function CHESTBURSTER.AddPowerupTable(tab)
+	table.Add(CHESTBURSTER.Powerups,tab)
+end

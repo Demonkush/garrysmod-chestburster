@@ -1,4 +1,5 @@
 AddCSLuaFile( "shared.lua" )
+AddCSLuaFile( "cl_init.lua" )
 include('shared.lua')
 
 function ENT:Initialize()
@@ -59,7 +60,16 @@ function ENT:Use(ply)
 	self.Opened = true
 	CHESTBURSTER_Message(ply, "Chest", "Opening...", Vector(255,215,185), false)
 	ply:Freeze(true)
-	timer.Simple(1,function() if IsValid(ply) then ply:Freeze(false) end CHESTBURSTER.OpenChest(ply,self) end)
+	timer.Simple(1,function() 
+		if IsValid(ply) then 
+			if !timer.Exists("chbu_frostbite"..ply:EntIndex()) then
+				if ply:GetNWBool("KnockedOut") == false then
+					ply:Freeze(false)
+				end
+			end
+		end 
+		CHESTBURSTER.OpenChest(ply,self) 
+	end)
 end
 
 function ENT:OnRemove()
