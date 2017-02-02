@@ -222,8 +222,7 @@ function CHESTBURSTER_DrawStatuses()
 	end
 end
 net.Receive("CHESTBURSTERSENDSTATUS",function(len)
-	local clear,status,time = net.ReadBool(),net.ReadString(),net.ReadInt(32)
-	if clear == true then local_status_table = {} end
+	local status,time = net.ReadString(),net.ReadInt(32)
 	if !table.HasValue(local_status_table,status) then table.insert(local_status_table,status) end
 	if !timer.Exists("CLTimerStatus"..status) then
 		timer.Create("CLTimerStatus"..status,time,1,function()

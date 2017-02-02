@@ -183,7 +183,6 @@ end
 function CHESTBURSTER.ClearElementalStatus(ply)
 	for a, b in pairs(CHESTBURSTER.Elements) do
 		b.ClearStatus(ply)
-		net.Start("CHESTBURSTERSENDSTATUS") net.WriteBool(true) net.Send(ply)
 	end
 end
 
@@ -217,7 +216,6 @@ function CHESTBURSTER.ElementalDamage(element,target,attacker)
 			if r >= b.buffChance then
 				b.onBuff(target,attacker)
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteBool(false)
 					net.WriteString(b.status)
 					net.WriteInt(b.time,32)
 				net.Send(target)
@@ -347,7 +345,7 @@ function player:Frostbite(time)
 		if IsValid(self) then if self:GetNWBool("KnockedOut") == false then self:Freeze(false) end end
 	end)
 	net.Start("CHESTBURSTERSENDSTATUS")
-		net.WriteBool(false) net.WriteString("Frostbite") net.WriteInt(time,32)
+		net.WriteString("Frostbite") net.WriteInt(time,32)
 	net.Send(self)
 end
 
@@ -359,7 +357,7 @@ function player:Slow(time)
 		self:ResetMovementSpeed()
 	end)
 	net.Start("CHESTBURSTERSENDSTATUS")
-		net.WriteBool(false) net.WriteString("Slowed") net.WriteInt(time,32)
+		net.WriteString("Slowed") net.WriteInt(time,32)
 	net.Send(self)
 end
 

@@ -22,7 +22,7 @@ CHESTBURSTER.Elements[1] = {
 				util.Effect( "fx_chbu_firepuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteBool(false) net.WriteString("Burning")	net.WriteInt(4,32)
+					net.WriteString("Burning")	net.WriteInt(4,32)
 				net.Send(target)
 			else target:SetNWBool("StatusFire",false) timer.Remove("CB_StatusFire"..target:EntIndex()) end
 		end)
@@ -72,7 +72,7 @@ CHESTBURSTER.Elements[2] = {
 				util.Effect( "fx_chbu_frostpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteBool(false) net.WriteString("Freezing")	net.WriteInt(8,32)
+					net.WriteString("Freezing")	net.WriteInt(8,32)
 				net.Send(target)
 			else target:SetNWBool("StatusFrost",false) timer.Remove("CB_StatusFrost"..target:EntIndex()) end
 		end)
@@ -117,7 +117,7 @@ CHESTBURSTER.Elements[3] = {
 				util.Effect( "fx_chbu_poisonpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteBool(false) net.WriteString("Poisoned")	net.WriteInt(12,32)
+					net.WriteString("Poisoned")	net.WriteInt(12,32)
 				net.Send(target)
 			else target:SetNWBool("StatusPoison",false) timer.Remove("CB_StatusPoison"..target:EntIndex()) end
 		end)
@@ -161,7 +161,7 @@ CHESTBURSTER.Elements[4] = {
 				util.Effect( "fx_chbu_stormpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteBool(false) net.WriteString("Electrified")	net.WriteInt(6,32)
+					net.WriteString("Electrified")	net.WriteInt(6,32)
 				net.Send(target)
 			else target:SetNWBool("StatusStorm",false) timer.Remove("CB_StatusStorm"..target:EntIndex()) end
 		end)
@@ -205,7 +205,7 @@ CHESTBURSTER.Elements[5] = {
 				util.Effect( "fx_chbu_waterpuff", fx ,true,true)
 
 				net.Start("CHESTBURSTERSENDSTATUS")
-					net.WriteBool(false) net.WriteString("Soaking")	net.WriteInt(10,32)
+					net.WriteString("Soaking")	net.WriteInt(10,32)
 				net.Send(target)
 			else target:SetNWBool("StatusWater",false) timer.Remove("CB_StatusWater"..target:EntIndex()) end
 		end)
