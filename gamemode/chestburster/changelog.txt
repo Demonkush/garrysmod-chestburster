@@ -2,6 +2,25 @@
 1.1b - Competition Submission Release ( Jan / 4th / 2017 )
 - Initial release.
 
+1.2c - ( Feb / 1st / 2017 )
+*** Balances
+- Magic Pistol damage and rate of fire slightly decreased.
+- Sorcerer Cannon explosion area of effect decreased.
+- Wandbar explosion area of effect decreased.
+- Mimics have slightly more health now.
+
+*** Fixes
+- Walking over weapons while holding one will no longer eat the weapons on the ground.
+- Weapon pickup / dropping is fixed now? ( I haven't fully tested it, but it seems to work now )
+- Bullet based weapons now deal damage to monsters.
+- Elemental statuses should display the proper negative buffs.
+- Apparently elements from player attacks weren't working at all, but should be now!
+- Debug toggle will now display chest spawn locations.
+- Freezing/Unfreezing of players in certain circumstances should no longer be wacky.
+- Lowered count on some particles.
+- General fixes.
+
+
 1.2b - ( Jan / 6th / 2017 )
 *** Fixes
 - Elemental statuses should display under the negative buffs area now.
