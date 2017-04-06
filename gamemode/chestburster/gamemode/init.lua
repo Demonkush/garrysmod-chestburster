@@ -5,6 +5,7 @@ include("shared.lua")
 include("sv_chest.lua")
 include("sv_player.lua")
 include("sv_round.lua")
+include("sv_presetmaps.lua")
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("shd_elements.lua")
 AddCSLuaFile("shd_powerups.lua")
@@ -12,6 +13,7 @@ AddCSLuaFile("shd_sounds.lua")
 AddCSLuaFile("shd_traps.lua")
 AddCSLuaFile("shd_weapons.lua")
 AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("cl_scoreboard.lua")
 util.AddNetworkString("CHESTBURSTERSENDSTATUS")
 util.AddNetworkString("CHESTBURSTERSENDPOWERUP")
 util.AddNetworkString("CHESTBURSTERROUNDINFO")
@@ -87,7 +89,6 @@ function CHESTBURSTER.RoundTick()
 		return plys
 	end
 
-
 	if CHESTBURSTER.RoundState == 1 then
 		if CheckForPlayers() >= 2 then
 			CHESTBURSTER.RoundStart()
@@ -120,7 +121,9 @@ function CHESTBURSTER_Message(ply,ttype,msg,col,broadcast)
 end
 
 function CHESTBURSTER_UpdateDebug(ply)
-	net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.WriteBool(CHESTBURSTER.Debug) net.Send(ply)
+	timer.Simple(0.1,function()
+		net.Start("CHESTBURSTERDEBUGUPDATE") net.WriteTable(CHESTBURSTER.ChestSpawnTable) net.WriteBool(CHESTBURSTER.Debug) net.Send(ply)
+	end)
 end
 
 --[[-------------------------------------------------------------------------
@@ -171,6 +174,15 @@ concommand.Add("chbu_clearchests", function(ply,cmd,args)
 	ply:PrintMessage(HUD_PRINTTALK,"Cleared all chest spawn data.")
 	CHESTBURSTER.ChestSpawnTable = {}
 	CHESTBURSTER_UpdateDebug(ply)
+end)
+
+--[[-------------------------------------------------------------------------
+Print Spawn Table (Server Only)
+---------------------------------------------------------------------------]]
+concommand.Add("chbu_printspawns", function(ply,cmd,args)
+	if !ply:IsSuperAdmin() then return end
+	ply:PrintMessage(HUD_PRINTTALK,"Spawn data printed to server console.")
+	print(table.ToString(CHESTBURSTER.ChestSpawnTable))
 end)
 
 --[[-------------------------------------------------------------------------

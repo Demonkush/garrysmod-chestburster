@@ -137,13 +137,17 @@ function GM:PlayerCanPickupWeapon(ply,wep)
 	if ply.NextPickup < CurTime() then
 		ply.NextPickup = CurTime()+2
 		if ply:GetNWBool("KnockedOut") == true then return false end -- cant when knocked out
-		if ply.AssignedWeapon == nil or ply:HasWeapon(CHESTBURSTER.FistWeapon) then -- all checks out
-			if wep:GetClass() != CHESTBURSTER.FistWeapon then
-				CHESTBURSTER.GiveWeapon(ply,wep:GetClass())
+		for a, b in pairs(CHESTBURSTER.Weapons) do
+			if b.wep == wep:GetClass() then 
+				if ply.AssignedWeapon == nil or ply:HasWeapon(CHESTBURSTER.FistWeapon) then -- all checks out
+					if wep:GetClass() != CHESTBURSTER.FistWeapon then
+						CHESTBURSTER.GiveWeapon(ply,wep:GetClass())
+					end
+					return true
+				end
+				if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then return true end -- got nothing so yeah
 			end
-			return true
 		end
-		if !ply:HasWeapon(CHESTBURSTER.FistWeapon) then return true end -- got nothing so yeah
 	end
 	return false
 end

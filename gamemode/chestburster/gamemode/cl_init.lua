@@ -1,4 +1,5 @@
 include("shared.lua")
+include("cl_scoreboard.lua")
 local CHESTBURSTER_TimerCL = 0
 local CHESTBURSTER_TimerTick = 0
 local CHESTBURSTER_PBarDistance = 0

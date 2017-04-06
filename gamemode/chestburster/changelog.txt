@@ -2,6 +2,19 @@
 1.1b - Competition Submission Release ( Jan / 4th / 2017 )
 - Initial release.
 
+1.3a - ( April / 5th / 2017 )
+*** Plug n Play
+- Setup no longer required. ( Direct install is enough to play )
+- Only setup for HL2DM and CS:S maps.
+
+*** Fixes / Changes
+- Chests should no longer error out on startup. ( This may have affected nobody )
+- Added 3D effects to some weapons.
+- Fists, Grenade and Sorcerer Cannon should now destroy breakables.
+- Tweaked various effects.
+- Better addon support. ( Will improve and write documentation at one point )
+
+
 1.2c - ( Feb / 1st / 2017 )
 *** Balances
 - Magic Pistol damage and rate of fire slightly decreased.

@@ -144,6 +144,9 @@ function SWEP:DealDamage()
 		if ( IsValid( phys ) ) then
 			phys:ApplyForceOffset( self.Owner:GetAimVector() * 1000 * phys:GetMass() + Vector(0,0,100), tr.HitPos )
 		end
+		if tr.Entity:GetClass() == "func_breakable" or tr.Entity:GetClass() == "func_breakable_surf" then
+			tr.Entity:Fire("Break","",0)
+		end
 	end
 
 	if ( SERVER ) then

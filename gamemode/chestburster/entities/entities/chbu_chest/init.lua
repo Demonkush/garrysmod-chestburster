@@ -50,6 +50,11 @@ function ENT:Initialize()
 	self.Opened = false
 end
 
+function ENT:Think()
+	local fx = EffectData() fx:SetOrigin( self:GetPos() )
+	util.Effect( "fx_chbu_chestparticles", fx ,true,true)
+end
+
 function ENT:DoFX(fx)
 	local effect = EffectData() effect:SetOrigin(self:GetPos()+Vector(0,0,32))
 	util.Effect(fx,effect,true,true)

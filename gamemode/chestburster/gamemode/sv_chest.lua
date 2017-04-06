@@ -35,7 +35,7 @@ function CHESTBURSTER.OpenChest(ply,chest)
 
 	if ply.AssignedWeapon == nil or ply.AssignedWeapon != ply:GetActiveWeapon() then
 		if r <= CHESTBURSTER.WeaponChance then
-			local awr = math.random(1,#CHESTBURSTER.Weapons) CHESTBURSTER.GiveWeapon(ply,awr)
+			local awr = math.random(2,#CHESTBURSTER.Weapons) CHESTBURSTER.GiveWeapon(ply,awr)
 		end
 	end
 	timer.Simple(1,function()

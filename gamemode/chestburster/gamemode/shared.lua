@@ -3,7 +3,7 @@ GM.Author = "Demonkush"
 GM.Website = "http://www.xmpstudios.com"
 
 CHESTBURSTER = {}
-CHESTBURSTER.Version = "1.2c"
+CHESTBURSTER.Version = "1.3a"
 CHESTBURSTER.ChestSpawnTable = {}
 
 include("shd_elements.lua")
@@ -15,7 +15,7 @@ include("shd_weapons.lua")
 CHESTBURSTER.ChestModels = {}
 function CHESTBURSTER.AddChestModel(a,b) table.insert(CHESTBURSTER.ChestModels,{model=a,offset=b}) end
 CHESTBURSTER.AddChestModel("models/hunter/blocks/cube05x1x05.mdl",Vector(0,0,12))
-CHESTBURSTER.AddChestModel("models/props_junk/wood_crate002a.mdl",Vector(0,0,12))
+CHESTBURSTER.AddChestModel("models/props_junk/wood_crate002a.mdl",Vector(0,0,16))
 CHESTBURSTER.AddChestModel("models/Items/ammocrate_smg1.mdl",Vector(0,0,12))
 CHESTBURSTER.AddChestModel("models/props_c17/FurnitureDrawer001a.mdl",Vector(0,0,12))
 CHESTBURSTER.AddChestModel("models/props_lab/filecabinet02.mdl",Vector(0,0,12))
@@ -27,12 +27,13 @@ CHESTBURSTER.AddPlayerModel("models/player/gman_high.mdl")
 CHESTBURSTER.AddPlayerModel("models/player/alyx.mdl")
 CHESTBURSTER.AddPlayerModel("models/player/eli.mdl")
 
--- Hard Variables ( do not change )
+-- // -- Hard Variables (( do not change! )) -- \\
 CHESTBURSTER.RoundTimer = 0
 CHESTBURSTER.RoundState = 1 -- 1 = waiting, 2 = active, 3 = ended / ending.
 CHESTBURSTER.RoundNumber = 0
 CHESTBURSTER.MapConfigLoaded = false
 CHESTBURSTER.Debug = false -- Toggle this with the concommand chbu_debug.
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
 -- Safe Variables ( configure these to your liking )
 CHESTBURSTER.MaxGold = 1000 -- Total gold to collect to win the game.
@@ -42,12 +43,7 @@ CHESTBURSTER.RoundTime 		= 300 	-- Duration of a round.
 CHESTBURSTER.MapVoteDelay 	= 10 	-- Delay between end of last round and map vote starting.
 CHESTBURSTER.MaxRounds 		= 3 	-- Total number of rounds before map change.
 
-CHESTBURSTER.DisableDefaultWeapons 	= false -- If you are using a custom weapon set, you can disable the default set.
-CHESTBURSTER.DisableDefaultTraps 	= false -- [NOT RECOMMENDED] If you are using a custom pack and want to disable the default set.
-CHESTBURSTER.DisableDefaultPowerups = false -- ^
-CHESTBURSTER.DisableDefaultElements = false -- ^
-
-CHESTBURSTER.FistWeapon 	= "weapon_chbu_fists"	-- Weapon to use for default fist weapon.
+CHESTBURSTER.FistWeapon 	= "weapon_chbu_fists"	-- Weapon to use for default fist weapon. Change in shd_weapons.lua too.
 CHESTBURSTER.FistDamage 	= 25 		-- Amount of damage dealt with fists.
 CHESTBURSTER.FistPower 		= 35		-- Knockback value.
 
@@ -73,10 +69,30 @@ CHESTBURSTER.KORegen		= 5 	-- Amount of KO to regen overtime.
 CHESTBURSTER.KORegenDelay	= 2 	-- KO regeneration delay.
 
 -- Available MapChangeMode types -- 
+-- "default": Uses preset map list / spawn data.
 -- "nextmap": Automatically retrieves and changes to next map. See mapcycle.txt in garrysmod/cfg
 -- "mapvote": Third party map vote system ( requires user config, see CHESTBURSTER.ChangeMap() )
-CHESTBURSTER.MapChangeMode = "nextmap"
+CHESTBURSTER.MapChangeMode = "default"
 
-function CHESTBURSTER.AddWeapon(name,wep)
-	table.insert(CHESTBURSTER.Weapons,{name,wep})
+-- Preset Blacklist options: css, hl2dm
+CHESTBURSTER.PresetMapBlacklist = {}
+
+--[[-------------------------------------------------------------------------
+ Addon Support functions
+-------------------------------------------------------------------------]]--
+-- name(string), weapon(weapon)
+function CHESTBURSTER.AddWeapon(name,weapon)
+	table.insert(CHESTBURSTER.Weapons,{name,weapon})
+end
+-- name(string),trapfunction(func)
+function CHESTBURSTER.AddTrap(name,trapfunction)
+	table.insert(CHESTBURSTER.Trap,{name,trapfunction})
+end
+-- name(string), description(string), color(color), duration(int), onpickup(func), onexpire(func)
+function CHESTBURSTER.AddPowerup(name,description,color,duration,onpickup,onexpire)
+	table.insert(CHESTBURSTER.Powerups,{name,description,color,duration,onpickup,onexpire})
+end
+-- name(string), statusname(string), buffchance(int), color(color), duration(int), onbuff(func), ondamage(func), imbueweapon(func), clearstatus(func)
+function CHESTBURSTER.AddElement(name,statusname,buffchance,color,duration,onbuff,ondamage,imbueweapon,clearstatus)
+	table.insert(CHESTBURSTER.Elements,{name,trapfunction})
 end

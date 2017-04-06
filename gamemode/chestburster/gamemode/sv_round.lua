@@ -10,6 +10,16 @@ end
 
 function CHESTBURSTER.LoadMapConfig()
 	local map = game.GetMap()
+
+	-- Load from sv_presetmaps.lua
+	if CHESTBURSTER.MapChangeMode == "default" then
+		CHESTBURSTER.GetPresetSpawnData()
+		CHESTBURSTER.MapConfigLoaded = true
+		print("[CHBU DEBUG] Loaded preset configuration for "..map..".bsp!")
+		return
+	end
+
+	-- Load from .txt data
 	local path = "chestburster/"..map..".txt"
 	if file.Exists(path,"DATA") then
 		local load = file.Read(path,"DATA")
@@ -138,9 +148,13 @@ end
 function CHESTBURSTER.ChangeMap()
 	timer.Simple(CHESTBURSTER.MapVoteDelay,function()
 		if CHESTBURSTER.MapChangeMode == "nextmap" then RunConsoleCommand("changelevel",game.GetMapNext())
+			-- Dont touch
 		elseif CHESTBURSTER.MapChangeMode == "mapvote" then	
-			-- Third Party Mapvote system commands go here, will differ depending on the addon
-			-- Example: RunConsoleCommand("mapvote_force_vote") -- KmapVote
+			-- >> Custom map vote functions go here!!! <<
+			XMPSwitch.GamevoteInit()
+		elseif CHESTBURSTER.MapChangeMode == "default" then
+			-- Dont touch
+			CHESTBURSTER.PresetChangeMap()
 		end
 
 		-- Failsafe ( if previous conditions were not met for some reason )

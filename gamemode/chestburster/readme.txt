@@ -1,3 +1,5 @@
+As of 1.3a setup is not required to play the game. Just put the gamemode in your garrysmod/gamemodes folder and play! You need CS:S or HL2DM installed at least.
+
 How to Setup:
 
 By default, Chestburster requires a mapcycle.txt file to change the maps properly. In the GitHub repo, I've provided separate mapcycles for CS:S and HL2DM maps, just put one of them in garrysmod/cfg or make your own.

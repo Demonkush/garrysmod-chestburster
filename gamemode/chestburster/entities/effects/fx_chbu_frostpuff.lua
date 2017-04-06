@@ -10,7 +10,7 @@ function EFFECT:Init(data)
 		part:SetDieTime(2*scale)
 		part:SetColor(155,175,255) 
 	end
-	for i=0, 5*scale do
+	for i=0, 10*scale do
 		local part = emit:Add("sprites/glow04_noz",data:GetOrigin()+Vector(0,0,math.random(-32,32)))
 		part:SetVelocity(VectorRand()*Vector(math.random(-155,155),math.random(-155,155),115)*scale)
 		part:SetStartAlpha(255)
@@ -19,7 +19,7 @@ function EFFECT:Init(data)
 		part:SetEndSize(0)
 		part:SetDieTime(math.random(1,1.5)*scale)
 		part:SetColor(155,175,255) 
-		part:SetGravity(Vector(0,0,256))
+		part:SetGravity(Vector(0,0,128))
 	end
 	emit:Finish()
 end

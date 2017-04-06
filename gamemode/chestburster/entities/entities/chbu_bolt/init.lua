@@ -39,8 +39,12 @@ function ENT:Explode()
 		end
 	end
 
-	local fx = EffectData() fx:SetOrigin( self:GetPos() ) fx:SetScale(1)
-	util.Effect( self:GetImpactEffect(), fx ,true,true)
+	local fx = EffectData() fx:SetOrigin(self:GetPos()) fx:SetScale(1)
+	util.Effect(self:GetImpactEffect(),fx,true,true)
+
+	local r,g,b = self:GetColor().r,self:GetColor().g,self:GetColor().b
+	local fx2 = EffectData() fx2:SetOrigin(self:GetPos()) fx2:SetScale(1) fx2:SetAngles(Angle(r,g,b))
+	util.Effect("fx_chbu_model_blast",fx2,true,true)
 
 	if self:GetElement() == "Storm" then
 		CHESTBURSTER.DoTesla(self:GetPos())
